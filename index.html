@@ -994,6 +994,321 @@
     .cs-sign,.cs-del{width:42px;height:42px}
     .cons .calc-out{grid-template-columns:1fr}
   }
+
+  /* =====================================================================
+     V7 – Ampel, Regel-Pop-up, Tagesstand, News-Sperren, Tracker, Beweis-Log
+  ===================================================================== */
+
+  /* ---------- Calculator: Firma + Regeln-Knopf ---------- */
+  .c-prow{display:flex;gap:8px;align-items:stretch}
+  .c-prow select{flex:1;min-width:0}
+  .c-rules-btn{flex:none;border-radius:11px;padding:0 13px;font-size:.72rem;white-space:nowrap;
+    background:rgba(245,183,0,.1);border-color:rgba(245,183,0,.32);color:var(--gold2)}
+  .c-rules-btn:hover{background:rgba(245,183,0,.18);border-color:rgba(245,183,0,.5)}
+
+  /* ---------- Tagesstand ---------- */
+  .day-box{border-radius:15px;border:1px solid rgba(10,132,255,.32);background:linear-gradient(165deg,rgba(10,132,255,.08),rgba(255,255,255,.015));overflow:hidden}
+  .day-box summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:600;font-size:.82rem}
+  .day-box summary::-webkit-details-marker{display:none}
+  .day-box summary .sm-ch{color:var(--muted);transition:transform .25s var(--ease)}
+  .day-box[open] summary .sm-ch{transform:rotate(180deg)}
+  .day-inner{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px}
+  .day-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .dk{padding:12px 14px;border-radius:13px;border:1px solid var(--stroke);background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:4px;min-width:0}
+  .dk span{font-size:.58rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .dk b{font-family:var(--mono);font-size:1.15rem;font-weight:700}
+  .dk small{font-size:.64rem;color:var(--muted);font-family:var(--mono)}
+  .dk.ok{border-color:rgba(50,215,75,.35)} .dk.ok b{color:#7CE99A}
+  .dk.warn{border-color:rgba(255,159,10,.45)} .dk.warn b{color:#FFC66B}
+  .dk.bad{border-color:rgba(255,69,58,.5);background:rgba(255,69,58,.07)} .dk.bad b{color:#FF9C94}
+  .day-out .hint{line-height:1.6;margin-top:10px}
+  .day-out > .hint:first-child{margin-top:0}
+  @media(max-width:420px){ .day-kpis{grid-template-columns:1fr} }
+
+  /* ---------- Pre-Trade-Ampel ---------- */
+  .ampel{border-radius:15px;border:1px solid var(--stroke);background:rgba(255,255,255,.025);overflow:hidden;transition:border-color .25s var(--ease),background .25s var(--ease)}
+  .amp-empty{padding:13px 16px;font-size:.74rem;color:var(--muted);line-height:1.6}
+  .amp-head{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--stroke)}
+  .amp-head b{display:block;font-size:.95rem;letter-spacing:-.01em}
+  .amp-head span{font-size:.72rem;color:var(--muted)}
+  .amp-lights{flex:none;display:flex!important;gap:6px;padding:6px 8px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.06)}
+  .amp-lights i{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.08);transition:background .25s var(--ease),box-shadow .25s var(--ease)}
+  .ampel.bad .amp-lights i.r{background:#FF453A;box-shadow:0 0 12px rgba(255,69,58,.8)}
+  .ampel.warn .amp-lights i.y{background:#FF9F0A;box-shadow:0 0 12px rgba(255,159,10,.8)}
+  .ampel.ok .amp-lights i.g{background:#32D74B;box-shadow:0 0 12px rgba(50,215,75,.8)}
+  .ampel.ok{border-color:rgba(50,215,75,.38);background:linear-gradient(165deg,rgba(50,215,75,.08),rgba(255,255,255,.015))}
+  .ampel.ok .amp-head b{color:#7CE99A}
+  .ampel.warn{border-color:rgba(255,159,10,.45);background:linear-gradient(165deg,rgba(255,159,10,.09),rgba(255,255,255,.015))}
+  .ampel.warn .amp-head b{color:#FFC66B}
+  .ampel.bad{border-color:rgba(255,69,58,.5);background:linear-gradient(165deg,rgba(255,69,58,.11),rgba(255,255,255,.015))}
+  .ampel.bad .amp-head b{color:#FF9C94}
+  .amp-list{list-style:none;margin:0;padding:10px 16px 13px;display:flex;flex-direction:column;gap:7px}
+  .amp-list li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:9px;align-items:start;font-size:.73rem;line-height:1.55;color:#C9C9D4}
+  .amp-list li b{color:var(--ink)}
+  .amp-list .ai{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.64rem;font-weight:800;margin-top:1px}
+  .amp-list li.ok .ai{background:rgba(50,215,75,.18);color:#7CE99A}
+  .amp-list li.warn .ai{background:rgba(255,159,10,.2);color:#FFC66B}
+  .amp-list li.bad .ai{background:rgba(255,69,58,.22);color:#FF9C94}
+  .amp-list li.info .ai{background:var(--fill2);color:var(--muted)}
+  .amp-list li.bad b{color:#FFC2BD}
+
+  /* ---------- Modale Fenster (Regeln, E-Mail) ---------- */
+  .rmodal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:18px;
+    background:rgba(0,0,0,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:rmIn .22s var(--ease)}
+  .rmodal[hidden]{display:none!important}
+  @keyframes rmIn{from{opacity:0}to{opacity:1}}
+  body.rm-open{overflow:hidden}
+  .rm-card{width:min(520px,100%);max-height:calc(100vh - 36px);max-height:calc(100dvh - 36px);overflow:auto;border-radius:22px;
+    background:linear-gradient(180deg,#1A1A20,#111115);border:1px solid var(--stroke2);box-shadow:0 30px 80px rgba(0,0,0,.7);
+    padding:18px 20px 18px;display:flex;flex-direction:column;gap:14px;animation:rmUp .32s var(--ease)}
+  @keyframes rmUp{from{transform:translateY(16px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+  .mm-card{width:min(680px,100%)}
+  .rm-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .rm-kicker{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);margin-bottom:4px}
+  .rm-head h3{font-family:var(--head);font-size:1.08rem;font-weight:700;letter-spacing:-.01em}
+  .rm-x{flex:none;width:34px;height:34px;padding:0;border-radius:50%;display:grid;place-items:center;font-size:.8rem}
+  .rm-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+  .rm-list li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:10px 12px;border-radius:12px;
+    background:rgba(255,255,255,.035);border:1px solid var(--stroke);font-size:.78rem;line-height:1.55;color:#D6D6DE;cursor:pointer;user-select:none;
+    transition:background .18s var(--ease),border-color .18s var(--ease)}
+  .rm-list li:hover{background:rgba(255,255,255,.06)}
+  .rm-ck{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,.28);display:grid;place-items:center;margin-top:1px;transition:all .18s var(--ease)}
+  .rm-list li.done{border-color:rgba(50,215,75,.35);background:rgba(50,215,75,.06);color:var(--muted)}
+  .rm-list li.done .rm-ck{background:#32D74B;border-color:#32D74B}
+  .rm-list li.done .rm-ck::after{content:"✓";color:#06240F;font-size:.7rem;font-weight:900}
+  .rm-note{font-size:.72rem;line-height:1.65;color:#C9C9D4;padding:10px 12px;border-radius:12px;background:rgba(245,183,0,.06);border:1px solid rgba(245,183,0,.22)}
+  .rm-note:empty{display:none}
+  .rm-note b{color:var(--ink)}
+  .rm-src{color:var(--muted);font-size:.66rem}
+  .rm-act{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .rm-mute{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);cursor:pointer}
+  .rm-mute input,.trk-checks input{width:17px;height:17px;accent-color:var(--gold);flex:none;margin:0}
+  .rm-ok,.mm-copy{min-width:130px;padding:11px 18px}
+  .mm-var{max-width:280px}
+  .mm-text{font-family:var(--mono);font-size:.74rem!important;font-weight:500!important;line-height:1.6;resize:vertical;min-height:240px}
+  @media(max-width:760px){
+    .rmodal{align-items:flex-end;padding:0}
+    .rm-card{width:100%;border-radius:22px 22px 0 0;max-height:88vh;max-height:88dvh;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+    .rm-ok,.mm-copy{flex:1}
+  }
+
+  /* ---------- News-Sperren pro Firma ---------- */
+  #newsblock-card .card-head{flex-wrap:wrap;gap:10px}
+  #newsblock-card .card-head h2 .dot{background:linear-gradient(135deg,#FF453A,#FF9F0A);box-shadow:0 0 10px rgba(255,69,58,.55)}
+  .nb-inst{min-width:210px}
+  .nb-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:8px;padding:16px 20px 6px}
+  .nb-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;border-radius:13px;background:rgba(255,255,255,.03);border:1px solid var(--stroke);min-width:0}
+  .nb-f{display:flex;align-items:center;gap:9px;min-width:0;flex-wrap:wrap}
+  .nb-f b{font-size:.8rem}
+  .nb-f small{font-family:var(--mono);font-size:.6rem;color:var(--muted);width:100%;padding-left:18px}
+  .nb-dot{width:9px;height:9px;border-radius:50%;background:#32D74B;box-shadow:0 0 8px rgba(50,215,75,.6);flex:none}
+  .nb-s{text-align:right;min-width:0;display:flex;flex-direction:column;gap:2px;align-items:flex-end}
+  .nb-s b{font-family:var(--mono);font-size:.8rem;color:#7CE99A;white-space:nowrap}
+  .nb-s small{font-size:.62rem;color:var(--muted);line-height:1.45;max-width:260px}
+  .nb-row.soon .nb-dot{background:#64D2FF;box-shadow:0 0 8px rgba(100,210,255,.6)} .nb-row.soon .nb-s b{color:#9BE2FF}
+  .nb-row.warn{border-color:rgba(255,159,10,.45);background:rgba(255,159,10,.06)}
+  .nb-row.warn .nb-dot{background:#FF9F0A;box-shadow:0 0 8px rgba(255,159,10,.7)} .nb-row.warn .nb-s b{color:#FFC66B}
+  .nb-row.bad{border-color:rgba(255,69,58,.5);background:rgba(255,69,58,.08)}
+  .nb-row.bad .nb-dot{background:#FF453A;box-shadow:0 0 10px rgba(255,69,58,.8);animation:nbPulse 1.2s ease-in-out infinite} .nb-row.bad .nb-s b{color:#FF9C94}
+  .nb-row.wait .nb-dot{background:var(--muted);box-shadow:none} .nb-row.wait .nb-s b{color:var(--muted)}
+  @keyframes nbPulse{50%{opacity:.35}}
+  .nb-note{padding:6px 20px 16px;line-height:1.6}
+  @media(max-width:760px){ .nb-list{padding:12px 12px 4px;grid-template-columns:1fr} .nb-note{padding:6px 14px 14px} .nb-inst{min-width:0;width:100%} }
+
+  /* ---------- Tracker ---------- */
+  #ph-card .card-head h2 .dot{background:linear-gradient(135deg,#32D74B,#7CE99A);box-shadow:0 0 10px rgba(50,215,75,.55)}
+  .ph-form{display:grid;grid-template-columns:150px 1.1fr 1fr 1fr 130px 120px auto;gap:10px;align-items:end}
+  .ph-form input[type=date],.trk-body input[type=date],.bl-main input[type=date],.bl-main input[type=datetime-local]{color-scheme:dark}
+  .ph-add{height:44px;border-radius:12px;white-space:nowrap}
+  .ph-form .fld input,.ph-form .fld select{height:44px}
+  .ph-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+  .cc-kpi{padding:12px 14px;border-radius:13px;background:rgba(255,255,255,.03);border:1px solid var(--stroke);display:flex;flex-direction:column;gap:3px;min-width:0}
+  .cc-kpi b{font-family:var(--mono);font-size:1.05rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cc-kpi span{font-size:.62rem;color:var(--muted)}
+  .ph-kpis .cc-kpi:first-child{border-color:rgba(50,215,75,.38);background:linear-gradient(165deg,rgba(50,215,75,.1),rgba(255,255,255,.02))}
+  .ph-kpis .cc-kpi:first-child b{color:#7CE99A}
+  .ph-firms{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  .ph-firms:empty{display:none}
+  .ph-chip{font-size:.68rem;font-family:var(--mono);padding:5px 11px;border-radius:999px;background:var(--fill);border:1px solid rgba(255,255,255,.06);color:#C9C9D4}
+  .ph-chip b{font-family:var(--body);color:var(--ink)}
+  .ph-list{margin-top:14px}
+  .ph-table{display:flex;flex-direction:column;gap:6px}
+  .ph-row{display:grid;grid-template-columns:96px minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) 34px;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;
+    background:rgba(255,255,255,.025);border:1px solid var(--stroke);font-size:.74rem}
+  .ph-row small{display:block;font-size:.62rem;color:var(--muted);font-family:var(--mono);margin-top:2px;font-weight:500}
+  .ph-d{font-family:var(--mono);color:var(--muted)}
+  .ph-a b{font-family:var(--mono);color:#7CE99A}
+  .ph-row.pending .ph-a b{color:#FFC66B}
+  .ph-row.denied .ph-a b{color:#FF9C94;text-decoration:line-through}
+  .ph-s{color:var(--muted);font-size:.68rem}
+  .ph-del,.bl-e-del,.bl-fdel{width:30px;height:30px;padding:0;border-radius:50%;display:grid;place-items:center;font-size:.66rem;color:var(--muted)}
+  .ph-del:hover,.bl-e-del:hover,.bl-fdel:hover{color:#FF9C94;background:rgba(255,69,58,.15)}
+  .ph-empty{padding:4px 2px}
+  @media(max-width:1180px){ .ph-form{grid-template-columns:repeat(3,minmax(0,1fr))} .ph-add{grid-column:span 3} }
+  @media(max-width:760px){
+    .ph-form{grid-template-columns:1fr 1fr} .ph-add{grid-column:span 2}
+    .ph-kpis{grid-template-columns:1fr 1fr}
+    .ph-row{grid-template-columns:minmax(0,1fr) auto 30px;grid-template-areas:"f a x" "d s x";row-gap:4px}
+    .ph-f{grid-area:f} .ph-a{grid-area:a;text-align:right} .ph-d{grid-area:d;font-size:.64rem} .ph-s{grid-area:s;text-align:right} .ph-del{grid-area:x}
+  }
+
+  .trk-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:start;margin-bottom:22px}
+  @media(max-width:1180px){ .trk-grid{grid-template-columns:1fr 1fr} #viol-card{grid-column:span 2} }
+  @media(max-width:760px){ .trk-grid{grid-template-columns:1fr;gap:14px;margin-bottom:14px} #viol-card{grid-column:auto} }
+  #ftg-card .card-head h2 .dot{background:linear-gradient(135deg,#BF5AF2,#64D2FF);box-shadow:0 0 10px rgba(191,90,242,.55)}
+  #dtp-card .card-head h2 .dot{background:linear-gradient(135deg,#0A84FF,#64D2FF);box-shadow:0 0 10px rgba(10,132,255,.55)}
+  #viol-card .card-head h2 .dot{background:linear-gradient(135deg,#FF453A,#FF9F0A);box-shadow:0 0 10px rgba(255,69,58,.55)}
+  #viol-card .card-head{flex-wrap:wrap;gap:8px}
+  .trk-body{display:flex;flex-direction:column;gap:14px}
+  .trk-body > .link-pill{align-self:flex-start}
+  .ftg-chain{display:flex;gap:6px;flex-wrap:wrap;min-height:30px;align-items:center}
+  .ftg-chain .ch{font-family:var(--mono);font-size:.66rem;font-weight:700;padding:5px 10px;border-radius:999px}
+  .ftg-chain .ch.ok{background:rgba(50,215,75,.14);border:1px solid rgba(50,215,75,.4);color:#7CE99A}
+  .ftg-chain .ch.no{background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.45);color:#FF9C94}
+  .trk-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .trk-btns button{font-size:.68rem;padding:8px 12px}
+  .ftg-ok{background:rgba(50,215,75,.12);border-color:rgba(50,215,75,.35)}
+  .ftg-no{background:rgba(255,69,58,.1);border-color:rgba(255,69,58,.35)}
+  .trk-checks{display:flex;flex-direction:column;gap:8px}
+  .trk-checks label{display:flex;align-items:flex-start;gap:10px;font-size:.76rem;line-height:1.5;color:#D6D6DE;cursor:pointer}
+  .trk-checks input{margin-top:1px}
+  .trk-out{display:flex;flex-direction:column;gap:12px}
+  .trk-bar{height:8px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}
+  .trk-bar span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--gold),#32D74B);transition:width .4s var(--ease)}
+  .dtp-bars{display:flex;flex-direction:column;gap:10px}
+  .dtp-bars > div{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:.7rem}
+  .dtp-bars span{color:var(--muted)}
+  .dtp-bars b{font-family:var(--mono);font-size:.7rem}
+  .viol-list{display:flex;flex-direction:column;gap:10px}
+  .vl-row{padding:12px 14px;border-radius:13px;background:rgba(255,255,255,.03);border:1px solid var(--stroke);display:flex;flex-direction:column;gap:9px}
+  .vl-row.warn{border-color:rgba(255,159,10,.42)} .vl-row.bad{border-color:rgba(255,69,58,.5);background:rgba(255,69,58,.06)}
+  .vl-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .vl-top b{font-size:.76rem}
+  .vl-ctl{display:flex;align-items:center;gap:6px;flex:none}
+  .vl-ctl button{width:32px;height:32px;padding:0;border-radius:10px;font-size:1rem;display:grid;place-items:center}
+  .vl-n{font-family:var(--mono);font-weight:700;font-size:1rem;min-width:40px;text-align:center}
+  .vl-n small{color:var(--muted);font-size:.64rem}
+  .vl-row.warn .vl-n{color:#FFC66B} .vl-row.bad .vl-n{color:#FF9C94}
+  .vl-dots{display:flex;gap:5px}
+  .vl-dots i{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.08)}
+  .vl-row.warn .vl-dots i.on{background:#FF9F0A} .vl-row.bad .vl-dots i.on{background:#FF453A}
+  .vl-now{font-size:.7rem;line-height:1.55;color:#C9C9D4}
+  .vl-now b{color:var(--ink)} .vl-now span{color:var(--muted)}
+  .vl-acct{font-size:.74rem!important;padding:8px 11px!important}
+  .trk-fx .card{margin-bottom:0}
+
+  /* ---------- Beweis-Log ---------- */
+  .bl-wrap{display:grid;grid-template-columns:320px minmax(0,1fr);gap:22px;align-items:start}
+  @media(max-width:980px){ .bl-wrap{grid-template-columns:1fr;gap:14px} }
+  .bl-side{position:sticky;top:96px}
+  @media(max-width:980px){ .bl-side{position:static} }
+  .bl-side .card-head{gap:10px}
+  .bl-side .card-head h2 .dot{background:linear-gradient(135deg,#64D2FF,#0A84FF);box-shadow:0 0 10px rgba(10,132,255,.55)}
+  .bl-new{padding:8px 13px;font-size:.72rem;white-space:nowrap}
+  .bl-list{display:flex;flex-direction:column;gap:6px;padding:12px;max-height:60vh;overflow:auto}
+  .bl-pad{padding:6px 6px 2px;line-height:1.6}
+  .bl-item{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;width:100%;padding:11px 13px;border-radius:13px;
+    background:rgba(255,255,255,.03);border:1px solid var(--stroke)}
+  .bl-item b{font-size:.78rem;line-height:1.4;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .bl-item small{font-size:.62rem;color:var(--muted);font-weight:500}
+  .bl-item.on{background:linear-gradient(165deg,rgba(245,183,0,.12),rgba(255,255,255,.02));border-color:rgba(245,183,0,.4)}
+  .bl-st{font-size:.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--fill2);color:var(--muted)}
+  .bl-st.open{background:rgba(10,132,255,.16);color:#9BE2FF}
+  .bl-st.wait{background:rgba(255,159,10,.16);color:#FFC66B}
+  .bl-st.esc{background:rgba(255,69,58,.18);color:#FF9C94}
+  .bl-st.won{background:rgba(50,215,75,.16);color:#7CE99A}
+  .bl-st.lost{background:rgba(255,255,255,.08);color:var(--muted)}
+  .bl-backup{display:flex;flex-direction:column;gap:6px;padding:0 12px 14px}
+  .bl-backup .link-pill{justify-content:center;cursor:pointer;font-family:var(--body)}
+  .bl-main{min-height:340px;transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+  .bl-main.drag{border-color:rgba(245,183,0,.6);box-shadow:0 0 0 3px rgba(245,183,0,.15)}
+  .bl-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:60px 24px;min-height:340px}
+  .bl-empty-ic{font-size:2.2rem;opacity:.7}
+  .bl-empty .hint{max-width:440px;line-height:1.65}
+  .bl-head{gap:10px;flex-wrap:wrap}
+  .bl-head .bl-title{flex:1 1 220px}
+  .bl-acts{display:flex;gap:6px;flex-wrap:wrap}
+  .bl-acts .link-pill{cursor:pointer;font-family:var(--body)}
+  .bl-del.arm{background:rgba(255,69,58,.2);border-color:rgba(255,69,58,.5);color:#FFC2BD}
+  .bl-body{display:flex;flex-direction:column;gap:14px}
+  .bl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  @media(max-width:620px){ .bl-grid{grid-template-columns:1fr 1fr} }
+  .bl-body textarea.inp{font-family:var(--body);font-size:.8rem;font-weight:500;line-height:1.55;resize:vertical}
+  .bl-trade{border-radius:15px;border:1px solid var(--stroke);background:rgba(255,255,255,.02);overflow:hidden}
+  .bl-trade summary{list-style:none;cursor:pointer;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:600;font-size:.8rem}
+  .bl-trade summary::-webkit-details-marker{display:none}
+  .bl-trade summary .sm-ch{color:var(--muted);transition:transform .25s var(--ease)}
+  .bl-trade[open] summary .sm-ch{transform:rotate(180deg)}
+  .bl-trade > .bl-grid{padding:0 16px 16px}
+  .bl-trade .inp{font-size:.8rem}
+  .bl-sec{display:flex;flex-direction:column;gap:10px;padding-top:6px;border-top:1px solid var(--stroke)}
+  .bl-sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding-top:8px}
+  .bl-sec-h b{font-size:.86rem}
+  .bl-checks{padding:2px 2px 0}
+  .bl-add{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:15px;background:rgba(255,255,255,.025);border:1px solid var(--stroke)}
+  .bl-add-g{grid-template-columns:1fr 1fr}
+  @media(max-width:520px){ .bl-add-g{grid-template-columns:1fr} }
+  .bl-add .primary{align-self:flex-start;padding:10px 18px}
+  .bl-drop{border:1.5px dashed rgba(255,255,255,.18);border-radius:13px;padding:16px;text-align:center;font-size:.74rem;color:var(--muted);line-height:1.6;transition:all .2s var(--ease)}
+  .bl-drop b{color:var(--ink)}
+  .bl-main.drag .bl-drop{border-color:var(--gold);background:rgba(245,183,0,.07);color:#FFE7A8}
+  .bl-pick{color:var(--gold2);text-decoration:underline;cursor:pointer}
+  .bl-pend{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .bl-pend:not(:empty){margin-top:10px}
+  .bl-pf{display:inline-flex;align-items:center;gap:6px;font-size:.66rem;padding:4px 4px 4px 10px;border-radius:999px;background:rgba(245,183,0,.1);border:1px solid rgba(245,183,0,.3);color:var(--ink);max-width:100%}
+  .bl-pf small{color:var(--muted)}
+  .bl-pf button{width:22px;height:22px;padding:0;border-radius:50%;font-size:.58rem;display:grid;place-items:center}
+  .bl-tl{list-style:none;margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:10px;position:relative}
+  .bl-tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;border-radius:2px;background:linear-gradient(180deg,rgba(245,183,0,.5),rgba(255,255,255,.06))}
+  .bl-tl > li{position:relative;padding:11px 13px;border-radius:13px;background:rgba(255,255,255,.03);border:1px solid var(--stroke);display:flex;flex-direction:column;gap:8px}
+  .bl-tl > li::before{content:"";position:absolute;left:-18px;top:16px;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px #0B0B0F}
+  .bl-tl > li.bl-tl-empty{background:none;border:none;padding:4px 0}
+  .bl-tl > li.bl-tl-empty::before{display:none}
+  .bl-tl-h{display:flex;align-items:center;gap:10px}
+  .bl-k{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);padding:2px 8px;border-radius:999px;background:rgba(245,183,0,.1)}
+  .bl-tl-h time{font-family:var(--mono);font-size:.64rem;color:var(--muted);flex:1}
+  .bl-tl-t{font-size:.76rem;line-height:1.6;color:#D6D6DE;white-space:normal;overflow-wrap:anywhere}
+  .bl-files{display:flex;gap:8px;flex-wrap:wrap}
+  .bl-file{display:inline-flex;align-items:center;gap:9px;padding:6px 10px 6px 6px;border-radius:11px;background:var(--fill);border:1px solid rgba(255,255,255,.06);cursor:pointer;max-width:100%;min-width:0}
+  .bl-file:hover{background:var(--fill2)}
+  .bl-file img{width:52px;height:40px;object-fit:cover;border-radius:7px;flex:none;background:#000}
+  .bl-fic{width:40px;height:40px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-size:.56rem;font-weight:700;color:var(--gold2);background:rgba(245,183,0,.1);flex:none}
+  .bl-fn{font-size:.68rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+  .bl-fn small{display:block;font-size:.58rem;color:var(--muted);font-family:var(--mono)}
+  .bl-print{display:none}
+
+  /* Druck-Dossier */
+  @media print{
+    body.printing-bl{background:#fff!important;color:#111!important;padding:0!important}
+    body.printing-bl > *:not(main){display:none!important}
+    body.printing-bl main > *:not(#tab-logs){display:none!important}
+    body.printing-bl #tab-logs{display:block!important;animation:none!important}
+    body.printing-bl #tab-logs > *:not(#bl-print){display:none!important}
+    body.printing-bl .bl-print{display:block!important;font-family:Arial,Helvetica,sans-serif;font-size:11pt;line-height:1.5;color:#111}
+    .bl-print h1{font-size:18pt;margin:0 0 4px}
+    .bl-print .pr-sub{color:#555;font-size:9pt;margin:0 0 14px}
+    .bl-print h2{font-size:12.5pt;margin:18px 0 6px;border-bottom:1px solid #ccc;padding-bottom:3px}
+    .bl-print table{border-collapse:collapse;width:100%;margin:4px 0}
+    .bl-print th,.bl-print td{text-align:left;padding:4px 8px;border:1px solid #ddd;font-size:10pt;vertical-align:top}
+    .bl-print th{width:30%;background:#f4f4f4}
+    .bl-print ul{margin:4px 0 0 18px;padding:0}
+    .bl-print .pr-e{break-inside:avoid;margin:10px 0;padding:8px 10px;border:1px solid #ddd;border-radius:4px}
+    .bl-print .pr-e p{margin:4px 0}
+    .bl-print figure{margin:8px 0;break-inside:avoid}
+    .bl-print img{max-width:100%;max-height:520px;border:1px solid #ccc}
+    .bl-print figcaption,.bl-print .pr-f{font-size:9pt;color:#555}
+  }
+
+  /* ---------- Handy: 8 Tabs unten ---------- */
+  @media(max-width:760px){
+    .tab-btn{font-size:.54rem;padding:9px 0 8px;gap:3px}
+    .tab-btn .tb-ic{width:20px;height:20px}
+  }
+  @media(max-width:380px){
+    .tabbar{left:6px;right:6px;padding:4px}
+    .tab-btn{font-size:.5rem}
+    .tab-btn .tb-ic{width:19px;height:19px}
+  }
 </style>
 </head>
 <body>
@@ -1033,7 +1348,8 @@
   <button class="tab-btn" type="button" role="tab" id="tb-payout" data-tab="payout" aria-controls="tab-payout" aria-selected="false" aria-label="Payout Junction"><svg class="tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M16 15h2"/></svg><span class="tb-l">Payout Junction</span><span class="tb-s">Payout</span><span class="tb-n">04</span></button>
   <button class="tab-btn" type="button" role="tab" id="tb-calc" data-tab="calc" aria-controls="tab-calc" aria-selected="false" aria-label="Calculator"><svg class="tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8"/><path d="M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg><span class="tb-l">Calculator</span><span class="tb-s">Rechner</span><span class="tb-n">05</span></button>
   <button class="tab-btn" type="button" role="tab" id="tb-cons" data-tab="cons" aria-controls="tab-cons" aria-selected="false" aria-label="Consistency"><svg class="tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M2 20h20"/><path d="M14 7h7" stroke-dasharray="2 2"/></svg><span class="tb-l">Consistency</span><span class="tb-s">Consist.</span><span class="tb-n">06</span></button>
-  <button class="tab-btn" type="button" role="tab" id="tb-fx" data-tab="fx" aria-controls="tab-fx" aria-selected="false" aria-label="USD ⇄ EUR"><svg class="tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3"/><path d="M17 17H6l3 3"/></svg><span class="tb-l">USD ⇄ EUR</span><span class="tb-s">USD⇄EUR</span><span class="tb-n">07</span></button>
+  <button class="tab-btn" type="button" role="tab" id="tb-track" data-tab="track" aria-controls="tab-track" aria-selected="false" aria-label="Tracker"><svg class="tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span class="tb-l">Tracker</span><span class="tb-s">Tracker</span><span class="tb-n">07</span></button>
+  <button class="tab-btn" type="button" role="tab" id="tb-logs" data-tab="logs" aria-controls="tab-logs" aria-selected="false" aria-label="Beweis-Log"><svg class="tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span class="tb-l">Beweis-Log</span><span class="tb-s">Beweise</span><span class="tb-n">08</span></button>
 </nav>
 
 <div class="price-strip rv" style="animation-delay:.05s" id="price-strip">
@@ -1101,6 +1417,14 @@
     </div>
     <div class="ne-box" id="next-event-body"></div>
   </div>
+</section>
+
+
+<section class="card mb rv" id="newsblock-card">
+  <div class="card-head"><h2><span class="dot"></span>News-Sperren pro Firma</h2>
+    <div class="seg nb-inst" role="group" aria-label="Instrument"><button type="button" data-i="XAUUSD" class="active">Gold</button><button type="button" data-i="US30">US30 / NAS</button></div></div>
+  <div class="nb-list" id="nb-list"></div>
+  <p class="hint nb-note">Funded-Konten · rote Ordner aus dem FF-Feed · Reden: Ende geschätzt (60 Min). FTMO Swing und alle Challenges sind frei. Fenster immer im Firmen-Kalender gegenchecken.</p>
 </section>
 
 <!-- ================= FF LISTE + MYFXBOOK ================= -->
@@ -1423,12 +1747,26 @@
     <button class="calc-clear" type="button" title="Alle Eingaben dieses Rechners leeren">✕ Leeren</button>
   </div>
   <div class="card-body calc-body">
-    <label class="fld"><span>Firmen-Limit pro Trade</span><select class="c-preset"><option value="none">Ohne Firmenlimit</option><option value="acg-mrr">Alpha Capital · Max Risk Rule (2 %)</option><option value="acg-ftg">Alpha Capital · Focused Trader Group (1 %)</option><option value="fn-std">FundedNext · Standard (3 %)</option><option value="fn-1">FundedNext · 1-%-Einstufung / DTP (1 %)</option><option value="fp-od">FundingPips · On-Demand – Striking (1 %)</option><option value="fp-leg-std">FundingPips Legacy Standard – Striking (1,2 %)</option><option value="fp-leg-flex">FundingPips Legacy Flex – Trade-Idee (2 %)</option><option value="ftmo">FTMO · kein festes Limit</option><option value="t5">The5ers · kein festes Limit</option><option value="bf">BrightFunded · kein festes Limit</option><option value="custom">Eigenes Limit …</option></select></label>
+    <div class="fld"><span>Firma &amp; Konto</span>
+      <div class="c-prow"><select class="c-preset" aria-label="Firma und Konto"><option value="none">Ohne Firma – nur rechnen</option><optgroup label="FTMO"><option value="ftmo-normal">FTMO · 2-Step Normal (Funded)</option><option value="ftmo-swing">FTMO · 2-Step Swing (Funded)</option></optgroup><optgroup label="FundingPips"><option value="fp-flex">FundingPips · 2-Step Flex · Bi-Weekly</option><option value="fp-flex-od">FundingPips · 2-Step Flex · On-Demand</option><option value="fp-std">FundingPips · 2-Step Standard · Weekly / Bi-Weekly</option><option value="fp-std-od">FundingPips · 2-Step Standard · On-Demand</option><option value="fp-pro">FundingPips · 2-Step Pro · Weekly</option><option value="fp-leg-flex">FundingPips · Legacy Flex (Kauf vor 28.09.)</option><option value="fp-leg-std">FundingPips · Legacy Standard (Kauf vor 28.09.)</option></optgroup><optgroup label="The5ers"><option value="t5-hs">The5ers · High Stakes</option></optgroup><optgroup label="Alpha Capital"><option value="acg-pro10">Alpha Capital · Alpha Pro 10 %</option><option value="acg-pro8">Alpha Capital · Alpha Pro 8 %</option><option value="acg-pro6">Alpha Capital · Alpha Pro 6 %</option><option value="acg-ftg">Alpha Capital · Focused Trader Group (1 %)</option><option value="acg-swing">Alpha Capital · Alpha Swing</option></optgroup><optgroup label="FundedNext"><option value="fn-stellar">FundedNext · Stellar 2-Step</option><option value="fn-lite">FundedNext · Stellar Lite</option><option value="fn-1">FundedNext · 1-%-Einstufung / DTP</option></optgroup><optgroup label="BrightFunded"><option value="bf-bright">BrightFunded · 2-Step Bright</option><option value="bf-classic">BrightFunded · 2-Step Classic</option></optgroup><optgroup label="Sonstiges"><option value="custom">Eigenes Limit …</option></optgroup></select>
+      <button type="button" class="c-rules-btn" title="Wichtigste Regeln anzeigen" aria-label="Wichtigste Regeln anzeigen">ⓘ Regeln</button></div>
+    </div>
     <label class="fld c-custom" hidden><span>Eigenes Limit pro Trade (% vom Startkapital)</span><input type="number" class="c-custlim" step="0.1" min="0" inputmode="decimal" placeholder="z. B. 1,5"></label>
     <div class="fld-row">
       <label class="fld"><span>Account-Size / Kontostand ($)</span><input type="number" class="c-size" min="0" step="100" inputmode="decimal" placeholder="z. B. 96000"></label>
       <label class="fld"><span>Startkapital (für Firmenlimit)</span><input type="number" class="c-start" min="0" step="1000" inputmode="decimal" placeholder="z. B. 100000"></label>
     </div>
+    <details class="day-box">
+      <summary>Tagesstand · wie viel darf ich heute noch verlieren? <span class="sm-ch">⌄</span></summary>
+      <div class="day-inner">
+        <div class="fld-row">
+          <label class="fld"><span>Balance zum Tagesstart ($)</span><input type="number" class="c-dbal" min="0" step="100" inputmode="decimal" placeholder="z. B. 101200"></label>
+          <label class="fld"><span>Equity zum Tagesstart (optional)</span><input type="number" class="c-deq" min="0" step="100" inputmode="decimal" placeholder="nur wenn höher"></label>
+        </div>
+        <label class="fld"><span>Equity jetzt (optional – sonst Kontostand oben)</span><input type="number" class="c-eqnow" min="0" step="100" inputmode="decimal" placeholder="inkl. offener Trades"></label>
+        <div class="day-out"></div>
+      </div>
+    </details>
     <div class="fld"><span>Risiko pro Trade</span>
       <div class="stepper">
         <button class="st-minus" type="button" aria-label="Risiko um 0,5 % senken">−</button>
@@ -1441,6 +1779,7 @@
       <div class="kpi main"><span class="k-lbl">Max. Verlust</span><span class="k-val c-loss">—</span><span class="k-sub c-loss-sub"></span></div>
       <div class="kpi"><span class="k-lbl">Kontostand bei SL</span><span class="k-val c-slbal">—</span><span class="k-sub c-slbal-sub"></span></div>
     </div>
+    <div class="ampel c-ampel" aria-live="polite"></div>
     <div class="limit-box c-limit"></div>
     <details class="sl-box" open>
       <summary>SL-Preis berechnen <span class="sm-ch">⌄</span></summary>
@@ -1450,6 +1789,7 @@
           <label class="fld"><span>$ je 1,00 Kursbewegung je Lot</span><input type="number" class="c-ppl" min="0" step="0.01" inputmode="decimal"></label>
         </div>
         <p class="hint c-inst-hint"></p>
+        <label class="fld c-lev-wrap"><span>Hebel 1: (für Margin-Check)</span><input type="number" class="c-lev" min="1" step="1" inputmode="numeric" placeholder="z. B. 25"></label>
         <div class="fld-row">
           <div class="fld"><span>Richtung</span><div class="seg c-dir"><button type="button" class="long" data-dir="long">▲ Long</button><button type="button" class="short" data-dir="short">▼ Short</button></div></div>
           <div class="fld"><span>Ich kenne …</span><div class="seg c-mode"><button type="button" data-mode="lots">meine Lots</button><button type="button" data-mode="sl">meinen SL-Abstand</button></div></div>
@@ -1475,12 +1815,26 @@
     <button class="calc-clear" type="button" title="Alle Eingaben dieses Rechners leeren">✕ Leeren</button>
   </div>
   <div class="card-body calc-body">
-    <label class="fld"><span>Firmen-Limit pro Trade</span><select class="c-preset"><option value="none">Ohne Firmenlimit</option><option value="acg-mrr">Alpha Capital · Max Risk Rule (2 %)</option><option value="acg-ftg">Alpha Capital · Focused Trader Group (1 %)</option><option value="fn-std">FundedNext · Standard (3 %)</option><option value="fn-1">FundedNext · 1-%-Einstufung / DTP (1 %)</option><option value="fp-od">FundingPips · On-Demand – Striking (1 %)</option><option value="fp-leg-std">FundingPips Legacy Standard – Striking (1,2 %)</option><option value="fp-leg-flex">FundingPips Legacy Flex – Trade-Idee (2 %)</option><option value="ftmo">FTMO · kein festes Limit</option><option value="t5">The5ers · kein festes Limit</option><option value="bf">BrightFunded · kein festes Limit</option><option value="custom">Eigenes Limit …</option></select></label>
+    <div class="fld"><span>Firma &amp; Konto</span>
+      <div class="c-prow"><select class="c-preset" aria-label="Firma und Konto"><option value="none">Ohne Firma – nur rechnen</option><optgroup label="FTMO"><option value="ftmo-normal">FTMO · 2-Step Normal (Funded)</option><option value="ftmo-swing">FTMO · 2-Step Swing (Funded)</option></optgroup><optgroup label="FundingPips"><option value="fp-flex">FundingPips · 2-Step Flex · Bi-Weekly</option><option value="fp-flex-od">FundingPips · 2-Step Flex · On-Demand</option><option value="fp-std">FundingPips · 2-Step Standard · Weekly / Bi-Weekly</option><option value="fp-std-od">FundingPips · 2-Step Standard · On-Demand</option><option value="fp-pro">FundingPips · 2-Step Pro · Weekly</option><option value="fp-leg-flex">FundingPips · Legacy Flex (Kauf vor 28.09.)</option><option value="fp-leg-std">FundingPips · Legacy Standard (Kauf vor 28.09.)</option></optgroup><optgroup label="The5ers"><option value="t5-hs">The5ers · High Stakes</option></optgroup><optgroup label="Alpha Capital"><option value="acg-pro10">Alpha Capital · Alpha Pro 10 %</option><option value="acg-pro8">Alpha Capital · Alpha Pro 8 %</option><option value="acg-pro6">Alpha Capital · Alpha Pro 6 %</option><option value="acg-ftg">Alpha Capital · Focused Trader Group (1 %)</option><option value="acg-swing">Alpha Capital · Alpha Swing</option></optgroup><optgroup label="FundedNext"><option value="fn-stellar">FundedNext · Stellar 2-Step</option><option value="fn-lite">FundedNext · Stellar Lite</option><option value="fn-1">FundedNext · 1-%-Einstufung / DTP</option></optgroup><optgroup label="BrightFunded"><option value="bf-bright">BrightFunded · 2-Step Bright</option><option value="bf-classic">BrightFunded · 2-Step Classic</option></optgroup><optgroup label="Sonstiges"><option value="custom">Eigenes Limit …</option></optgroup></select>
+      <button type="button" class="c-rules-btn" title="Wichtigste Regeln anzeigen" aria-label="Wichtigste Regeln anzeigen">ⓘ Regeln</button></div>
+    </div>
     <label class="fld c-custom" hidden><span>Eigenes Limit pro Trade (% vom Startkapital)</span><input type="number" class="c-custlim" step="0.1" min="0" inputmode="decimal" placeholder="z. B. 1,5"></label>
     <div class="fld-row">
       <label class="fld"><span>Account-Size / Kontostand ($)</span><input type="number" class="c-size" min="0" step="100" inputmode="decimal" placeholder="z. B. 96000"></label>
       <label class="fld"><span>Startkapital (für Firmenlimit)</span><input type="number" class="c-start" min="0" step="1000" inputmode="decimal" placeholder="z. B. 100000"></label>
     </div>
+    <details class="day-box">
+      <summary>Tagesstand · wie viel darf ich heute noch verlieren? <span class="sm-ch">⌄</span></summary>
+      <div class="day-inner">
+        <div class="fld-row">
+          <label class="fld"><span>Balance zum Tagesstart ($)</span><input type="number" class="c-dbal" min="0" step="100" inputmode="decimal" placeholder="z. B. 101200"></label>
+          <label class="fld"><span>Equity zum Tagesstart (optional)</span><input type="number" class="c-deq" min="0" step="100" inputmode="decimal" placeholder="nur wenn höher"></label>
+        </div>
+        <label class="fld"><span>Equity jetzt (optional – sonst Kontostand oben)</span><input type="number" class="c-eqnow" min="0" step="100" inputmode="decimal" placeholder="inkl. offener Trades"></label>
+        <div class="day-out"></div>
+      </div>
+    </details>
     <div class="fld"><span>Risiko pro Trade</span>
       <div class="stepper">
         <button class="st-minus" type="button" aria-label="Risiko um 0,5 % senken">−</button>
@@ -1493,6 +1847,7 @@
       <div class="kpi main"><span class="k-lbl">Max. Verlust</span><span class="k-val c-loss">—</span><span class="k-sub c-loss-sub"></span></div>
       <div class="kpi"><span class="k-lbl">Kontostand bei SL</span><span class="k-val c-slbal">—</span><span class="k-sub c-slbal-sub"></span></div>
     </div>
+    <div class="ampel c-ampel" aria-live="polite"></div>
     <div class="limit-box c-limit"></div>
     <details class="sl-box" open>
       <summary>SL-Preis berechnen <span class="sm-ch">⌄</span></summary>
@@ -1502,6 +1857,7 @@
           <label class="fld"><span>$ je 1,00 Kursbewegung je Lot</span><input type="number" class="c-ppl" min="0" step="0.01" inputmode="decimal"></label>
         </div>
         <p class="hint c-inst-hint"></p>
+        <label class="fld c-lev-wrap"><span>Hebel 1: (für Margin-Check)</span><input type="number" class="c-lev" min="1" step="1" inputmode="numeric" placeholder="z. B. 25"></label>
         <div class="fld-row">
           <div class="fld"><span>Richtung</span><div class="seg c-dir"><button type="button" class="long" data-dir="long">▲ Long</button><button type="button" class="short" data-dir="short">▼ Short</button></div></div>
           <div class="fld"><span>Ich kenne …</span><div class="seg c-mode"><button type="button" data-mode="lots">meine Lots</button><button type="button" data-mode="sl">meinen SL-Abstand</button></div></div>
@@ -1618,8 +1974,81 @@
   </div>
   <p class="hint cs-foot">Alle Firmen messen pro <b>Handelstag</b>, nicht pro Trade – mehrere Trades am selben Tag also zusammenzählen. Die meisten Regeln setzen nach jedem Payout auf 0. Keine Gewähr: vor dem Antrag den Wert im Firmen-Dashboard gegenchecken.</p>
 </section>
-<section class="tab-panel" id="tab-fx" data-tab="fx" role="tabpanel" aria-labelledby="tb-fx">
-  <div class="fx-wrap">
+<section class="tab-panel" id="tab-track" data-tab="track" role="tabpanel" aria-labelledby="tb-track">
+  <div class="panel-intro">
+    <div><h2>Tra<span>cker</span></h2>
+    <p>Payouts, Ausstiege aus Sonder-Programmen und Verstöße im Blick. Alles bleibt nur in diesem Browser gespeichert.</p></div>
+  </div>
+
+  <section class="card mb rv" id="ph-card">
+    <div class="card-head"><h2><span class="dot"></span>Payout-Historie</h2>
+      <button type="button" class="link-pill ph-csv">CSV ↓</button></div>
+    <div class="card-body">
+      <div class="ph-form">
+        <label class="fld"><span>Datum</span><input type="date" class="inp ph-date"></label>
+        <label class="fld"><span>Firma</span><select class="ph-firm"><option value="ftmo">FTMO</option><option value="fp">FundingPips</option><option value="t5">The5ers</option><option value="acg">Alpha Capital</option><option value="fn">FundedNext</option><option value="bf">BrightFunded</option><option value="other">Andere</option></select></label>
+        <label class="fld"><span>Konto (optional)</span><input type="text" class="inp ph-acct" maxlength="40" placeholder="z. B. 100K Flex"></label>
+        <label class="fld"><span>Betrag ($, ausgezahlt)</span><input type="number" class="inp ph-amt" min="0" step="0.01" inputmode="decimal" placeholder="z. B. 2450"></label>
+        <label class="fld"><span>Status</span><select class="ph-status"><option value="paid">ausgezahlt</option><option value="pending">beantragt</option><option value="denied">abgelehnt</option></select></label>
+        <label class="fld"><span>Weg</span><select class="ph-method"><option>Rise</option><option>Krypto</option><option>Bank</option><option>Karte</option><option>Andere</option></select></label>
+        <button type="button" class="primary ph-add">＋ Eintragen</button>
+      </div>
+      <div class="ph-kpis"></div>
+      <div class="ph-firms"></div>
+      <div class="ph-list"></div>
+    </div>
+  </section>
+
+  <div class="trk-grid">
+    <section class="card rv" id="ftg-card">
+      <div class="card-head"><h2><span class="dot"></span>Alpha · Ausstieg Focused Trader Group</h2></div>
+      <div class="card-body trk-body">
+        <div class="fld-row">
+          <div class="fld"><span>Konto gekauft</span><div class="seg ftg-buy"><button type="button" data-v="old">bis 21.07.26</button><button type="button" data-v="new">danach</button></div></div>
+          <div class="fld"><span>Auszahlungsart</span><div class="seg ftg-type"><button type="button" data-v="bw">Bi-Weekly</button><button type="button" data-v="od">On-Demand</button></div></div>
+        </div>
+        <div class="fld-row">
+          <label class="fld"><span>Nötige Payouts in Folge</span><input type="number" class="inp ftg-need" min="1" max="6" step="1" inputmode="numeric"></label>
+          <label class="fld"><span>Erster Trade auf dem Konto</span><input type="date" class="inp ftg-first"></label>
+        </div>
+        <p class="hint">Hat Alpha die Frist per E-Mail verlängert, trag die verlangte Zahl oben ein.</p>
+        <div class="fld"><span>Payout-Kette</span>
+          <div class="ftg-chain"></div>
+          <div class="trk-btns"><button type="button" class="ftg-ok">＋ Payout erfolgreich</button><button type="button" class="ftg-no">＋ Payout abgelehnt</button><button type="button" class="ftg-undo">Letzten entfernen</button></div>
+        </div>
+        <div class="trk-checks">
+          <label><input type="checkbox" class="ftg-c1"> Konto steht auf dem Startsaldo</label>
+          <label><input type="checkbox" class="ftg-c2"> Keine offenen Positionen</label>
+        </div>
+        <div class="trk-out ftg-out"></div>
+        <button type="button" class="link-pill trk-mail" data-mail="ftg">E-Mail-Entwurf (EN) ✉</button>
+      </div>
+    </section>
+
+    <section class="card rv" id="dtp-card">
+      <div class="card-head"><h2><span class="dot"></span>FundedNext · Ausstieg DTP</h2></div>
+      <div class="card-body trk-body">
+        <div class="fld-row">
+          <label class="fld"><span>Aufnahme ins DTP</span><input type="date" class="inp dtp-since"></label>
+          <label class="fld"><span>Gewinn seit Aufnahme ($)</span><input type="number" class="inp dtp-profit" min="0" step="100" inputmode="decimal" placeholder="über alle Konten"></label>
+        </div>
+        <div class="fld"><span>Reward-Zyklen seit Aufnahme</span>
+          <div class="stepper"><button type="button" class="dtp-minus" aria-label="Zyklus abziehen">−</button><div class="st-wrap"><input type="number" class="inp dtp-cyc" min="0" step="1" inputmode="numeric" value="0" aria-label="Reward-Zyklen"><span class="st-unit">/ 5</span></div><button type="button" class="dtp-plus" aria-label="Zyklus hinzufügen">+</button></div>
+        </div>
+        <div class="trk-out dtp-out"></div>
+        <p class="hint">Raus: 30.000 $ Gesamtgewinn über beliebige FundedNext-Konten und 5 Reward-Zyklen nach Aufnahme – dann Antrag beim Trading Ethics Team.</p>
+        <button type="button" class="link-pill trk-mail" data-mail="dtp">E-Mail-Entwurf (EN) ✉</button>
+      </div>
+    </section>
+
+    <section class="card rv" id="viol-card">
+      <div class="card-head"><h2><span class="dot"></span>Verstoß-Zähler</h2><span class="hint">Verstöße verfallen meist nie</span></div>
+      <div class="card-body viol-list"></div>
+    </section>
+  </div>
+
+  <div class="trk-fx">
+
   <section class="card rv" id="fx-card">
     <div class="card-head">
       <h2><span class="dot"></span><span><span id="fx-title">USD &rarr; EUR</span>-Rechner</span></h2>
@@ -1637,7 +2066,42 @@
   </section>
   </div>
 </section>
+<section class="tab-panel" id="tab-logs" data-tab="logs" role="tabpanel" aria-labelledby="tb-logs">
+  <div class="panel-intro">
+    <div><h2>Beweis-<span>Log</span></h2>
+    <p>Pro Streitfall alles an einem Ort: Zeitstrahl, Screenshots, E-Mails, Deal-Tickets. Dateien einfach reinziehen. Gespeichert wird nur in diesem Browser – nichts landet auf GitHub. Regelmäßig ein Backup exportieren.</p></div>
+  </div>
+  <div class="bl-wrap">
+    <section class="card bl-side">
+      <div class="card-head"><h2><span class="dot"></span>Streitfälle</h2><button type="button" class="primary bl-new">＋ Neuer Fall</button></div>
+      <div class="bl-list" id="bl-list"></div>
+      <div class="bl-backup">
+        <button type="button" class="link-pill bl-export">Backup exportieren ↓</button>
+        <label class="link-pill bl-import-l">Backup importieren ↑<input type="file" class="bl-import" accept="application/json,.json" hidden></label>
+      </div>
+    </section>
+    <section class="card bl-main" id="bl-main"></section>
+  </div>
+  <div id="bl-print" class="bl-print"></div>
+</section>
 </main>
+
+<div class="rmodal" id="rmodal" hidden role="dialog" aria-modal="true" aria-labelledby="rm-title">
+  <div class="rm-card">
+    <div class="rm-head"><div><div class="rm-kicker">Hast du drauf geachtet?</div><h3 id="rm-title"></h3></div><button type="button" class="rm-x" aria-label="Schließen">✕</button></div>
+    <ul class="rm-list"></ul>
+    <p class="rm-note"></p>
+    <div class="rm-act"><label class="rm-mute"><input type="checkbox"> heute nicht mehr für dieses Konto</label><button type="button" class="primary rm-ok">Alles klar</button></div>
+  </div>
+</div>
+<div class="rmodal" id="mailmodal" hidden role="dialog" aria-modal="true" aria-labelledby="mm-title">
+  <div class="rm-card mm-card">
+    <div class="rm-head"><div><div class="rm-kicker">E-Mail-Entwurf · Englisch</div><h3 id="mm-title"></h3></div><button type="button" class="rm-x" aria-label="Schließen">✕</button></div>
+    <div class="seg mm-var" role="group" aria-label="Ton"><button type="button" data-v="0" class="active">Kooperativ</button><button type="button" data-v="1">Bestimmt</button></div>
+    <textarea class="inp mm-text" rows="14" spellcheck="false"></textarea>
+    <div class="rm-act"><span class="hint">Vor dem Senden lesen und Platzhalter in [eckigen Klammern] füllen.</span><button type="button" class="primary mm-copy">Kopieren</button></div>
+  </div>
+</div>
 
 <footer class="rv">
   <div class="xlinks">
@@ -2463,7 +2927,11 @@ setInterval(() => loadFeed(false), AUTO_REFRESH_MS);
   }catch(e){}
 })();
 
-const CALC_PRESETS = [{"id": "none", "label": "Ohne Firmenlimit", "limit": null, "kind": "", "note": ""}, {"id": "acg-mrr", "label": "Alpha Capital · Max Risk Rule (2 %)", "limit": 2.0, "kind": "hard", "note": "Offener Verlust je Asset, Equity-basiert, alle Qualified-Konten mit Kauf nach 21.07.26. Nur Verlust-Positionen werden addiert, Gewinner verrechnen nicht. Re-Entry in gleicher Richtung binnen 10 Min. wird addiert. Bruch = Konto zu."}, {"id": "acg-ftg", "label": "Alpha Capital · Focused Trader Group (1 %)", "limit": 1.0, "kind": "hard", "note": "1 % je Position und kumuliert. Nach ≥ 1 % Verlust ist das Symbol bis zum nächsten Handelstag gesperrt."}, {"id": "fn-std", "label": "FundedNext · Standard (3 %)", "limit": 3.0, "kind": "cut", "note": "3 % kumuliert über alle offenen Positionen. 1. Verstoß: 100 % Gewinnabzug, 2. Verstoß: dauerhaft 1 %."}, {"id": "fn-1", "label": "FundedNext · 1-%-Einstufung / DTP (1 %)", "limit": 1.0, "kind": "cut", "note": "1 % über alle offenen Positionen. Verstoß: 100 % Gewinnabzug, im DTP ab dem 2. Mal Split 50/50."}, {"id": "fp-od", "label": "FundingPips · On-Demand – Striking (1 %)", "limit": 1.0, "kind": "cut", "note": "Warnung ab 1 % geschlossenem + floatendem Verlust je Trade-Idee. 2. Strike halbiert den Split, 4. Strike schließt das Konto."}, {"id": "fp-leg-std", "label": "FundingPips Legacy Standard – Striking (1,2 %)", "limit": 1.2, "kind": "cut", "note": "Nur Konten mit Kauf vor 28.09.26, 8-%-Ziel, über 25K. Strikes verfallen nie."}, {"id": "fp-leg-flex", "label": "FundingPips Legacy Flex – Trade-Idee (2 %)", "limit": 2.0, "kind": "hard", "note": "Nur Konten mit Kauf vor 28.09.26 über 25K. Realisiert + unrealisiert je Trade-Idee. Bruch = sofortige Kontoschließung."}, {"id": "ftmo", "label": "FTMO · kein festes Limit", "limit": null, "kind": "", "note": "Kein hartes Limit pro Trade – Daily 5 % und Max 10 % im Blick behalten."}, {"id": "t5", "label": "The5ers · kein festes Limit", "limit": null, "kind": "", "note": "Kein festes Limit – Overleveraging und Overexposure gelten aber als verbotene Praxis."}, {"id": "bf", "label": "BrightFunded · kein festes Limit", "limit": null, "kind": "", "note": "Kein festes Limit – Overleveraging und Overexposure sind verboten."}, {"id": "custom", "label": "Eigenes Limit …", "limit": null, "kind": "custom", "note": "Eigenes Limit pro Trade in % vom Startkapital."}];
+const CALC_PRESETS = [{"id": "none", "group": "", "label": "Ohne Firma – nur rechnen", "limit": null, "kind": "", "note": "", "daily": [0, "bal", "start"], "maxloss": 0, "news": null, "hold": "", "weekend": "allow", "daily_close": false, "lev": null, "maxlots": null, "rules": []}, {"id": "ftmo-normal", "group": "FTMO", "label": "FTMO · 2-Step Normal (Funded)", "limit": null, "kind": "", "note": "Kein hartes Limit pro Trade – Daily 5 % und Max 10 % im Blick behalten.", "daily": [5, "bal", "start"], "maxloss": 10, "news": [2, "usd", "Konto kann gekündigt werden"], "hold": "Halten erlaubt, wenn der Trade mehr als 2 Min vorher eröffnet wurde.", "weekend": "close", "daily_close": false, "lev": null, "maxlots": null, "rules": ["News ±2 Min: kein Öffnen und Schließen – auch SL, TP und Pending Orders. Ein Verstoß kann das Konto kosten.", "Vor dem Wochenende und vor Marktpausen über 2 Std. alle Positionen schließen.", "Daily Loss 5 % vom Startkapital, gerechnet ab der Balance zum Tagesstart.", "Max Loss 10 % statisch – das Konto darf nie unter 90 % des Startkapitals fallen.", "Kein Limit pro Trade, aber Gambling und Overleveraging sind verboten."]}, {"id": "ftmo-swing", "group": "FTMO", "label": "FTMO · 2-Step Swing (Funded)", "limit": null, "kind": "", "note": "Kein hartes Limit pro Trade.", "daily": [5, "bal", "start"], "maxloss": 10, "news": null, "hold": "", "weekend": "allow", "daily_close": false, "lev": null, "maxlots": null, "rules": ["Keine News-Regel – Handeln um News ist erlaubt.", "Halten über Nacht und übers Wochenende erlaubt.", "Daily Loss 5 % vom Startkapital ab Balance zum Tagesstart, Max Loss 10 % statisch.", "Kein Limit pro Trade, aber Gambling und Overleveraging sind verboten."]}, {"id": "fp-flex", "group": "FundingPips", "label": "FundingPips · 2-Step Flex · Bi-Weekly", "limit": null, "kind": "", "note": "Bi-Weekly ohne Striking – kein festes Limit pro Trade.", "daily": [4, "max", "basis"], "maxloss": 12, "news": [5, "usd", "voller Trade-Gewinn wird gestrichen"], "hold": "Ausnahme: Trades, die mindestens 5 Std. vorher eröffnet wurden.", "weekend": "close", "daily_close": true, "lev": null, "maxlots": null, "rules": ["Kein Halten über Nacht: Auto-Close täglich 22:45 Uhr deutscher Zeit (15 Min vor NY-Schluss) – außer mit Swing-Add-on.", "News ±5 Min: der ganze Trade-Gewinn wird gestrichen. Ausnahme: Trade mindestens 5 Std. vorher eröffnet.", "Daily 4 % vom höheren Wert aus Balance und Equity zum Tagesstart (00:00 UTC+3).", "Max Loss 12 % statisch.", "Hedging verboten, Copy-Trading nur zwischen eigenen Konten."]}, {"id": "fp-flex-od", "group": "FundingPips", "label": "FundingPips · 2-Step Flex · On-Demand", "limit": 1.0, "kind": "cut", "note": "Striking: ab 1 % geschlossenem + floatendem Verlust je Trade-Idee ein Strike. 2. Strike halbiert den Split, 4. schließt das Konto.", "daily": [4, "max", "basis"], "maxloss": 12, "news": [5, "usd", "voller Trade-Gewinn wird gestrichen"], "hold": "Ausnahme: Trades, die mindestens 5 Std. vorher eröffnet wurden.", "weekend": "close", "daily_close": true, "lev": null, "maxlots": null, "rules": ["Striking System: 1 % Verlust je Trade-Idee = Strike. Strikes verfallen nie.", "On-Demand-Payout: kein Tag über 35 % vom Gewinn und 7 Profit-Tage ≥ 0,5 %.", "Auto-Close täglich 22:45 Uhr deutscher Zeit – außer mit Swing-Add-on.", "News ±5 Min: der ganze Trade-Gewinn wird gestrichen.", "Daily 4 % vom höheren Wert Balance/Equity zum Tagesstart, Max 12 % statisch."]}, {"id": "fp-std", "group": "FundingPips", "label": "FundingPips · 2-Step Standard · Weekly / Bi-Weekly", "limit": null, "kind": "", "note": "Kein festes Limit pro Trade.", "daily": [5, "max", "basis"], "maxloss": 10, "news": [5, "usd", "voller Trade-Gewinn wird gestrichen"], "hold": "Ausnahme: Trades, die mindestens 5 Std. vorher eröffnet wurden.", "weekend": "close", "daily_close": true, "lev": null, "maxlots": null, "rules": ["Auto-Close täglich 22:45 Uhr deutscher Zeit – außer mit Swing-Add-on.", "News ±5 Min: der ganze Trade-Gewinn wird gestrichen.", "Daily 5 % (3 % mit Add-on) vom höheren Wert Balance/Equity zum Tagesstart, Max 10 % statisch.", "Weekly 60 % · Bi-Weekly 80 % · Mindestantrag 1 % der Kontogröße."]}, {"id": "fp-std-od", "group": "FundingPips", "label": "FundingPips · 2-Step Standard · On-Demand", "limit": 1.0, "kind": "cut", "note": "Striking: ab 1 % Verlust je Trade-Idee ein Strike – 2. halbiert den Split, 4. schließt das Konto.", "daily": [5, "max", "basis"], "maxloss": 10, "news": [5, "usd", "voller Trade-Gewinn wird gestrichen"], "hold": "Ausnahme: Trades, die mindestens 5 Std. vorher eröffnet wurden.", "weekend": "close", "daily_close": true, "lev": null, "maxlots": null, "rules": ["Striking System: 1 % Verlust je Trade-Idee = Strike. Strikes verfallen nie.", "On-Demand: kein Tag über 35 % vom Gewinn, 7 Profit-Tage ≥ 0,5 %.", "Auto-Close täglich 22:45 Uhr deutscher Zeit – außer mit Swing-Add-on.", "News ±5 Min: der ganze Trade-Gewinn wird gestrichen."]}, {"id": "fp-pro", "group": "FundingPips", "label": "FundingPips · 2-Step Pro · Weekly", "limit": null, "kind": "", "note": "Kein festes Limit pro Trade im Weekly-Zyklus.", "daily": [3, "max", "basis"], "maxloss": 6, "news": [5, "usd", "voller Trade-Gewinn wird gestrichen"], "hold": "Ausnahme: Trades, die mindestens 5 Std. vorher eröffnet wurden.", "weekend": "close", "daily_close": true, "lev": null, "maxlots": null, "rules": ["Daily nur 3 % vom höheren Wert Balance/Equity, Max Loss nur 6 % statisch.", "Auto-Close täglich 22:45 Uhr deutscher Zeit – außer mit Swing-Add-on.", "News ±5 Min: der ganze Trade-Gewinn wird gestrichen.", "Weekly 80 % · On-Demand 100 % nur mit 35 % Consistency und Striking."]}, {"id": "fp-leg-flex", "group": "FundingPips", "label": "FundingPips · Legacy Flex (Kauf vor 28.09.)", "limit": 2.0, "kind": "hard", "note": "Über 25K: 2 % Verlust je Trade-Idee (realisiert + offen) = sofortige Kontoschließung.", "daily": [4, "max", "basis"], "maxloss": 12, "news": [5, "usd", "voller Trade-Gewinn wird gestrichen"], "hold": "Ausnahme: Trades, die mindestens 5 Std. vorher eröffnet wurden.", "weekend": "close", "daily_close": false, "lev": [5, null], "maxlots": null, "rules": ["2 % Verlust je Trade-Idee = Hard Breach – Re-Entry binnen 10 Min zählt dazu.", "Overnight erlaubt, Wochenende gesperrt (Auto-Close, kein Breach).", "Metalle-Hebel seit 22.10.26 nur 1:5 – Margin vorher prüfen.", "News ±5 Min: der ganze Trade-Gewinn wird gestrichen."]}, {"id": "fp-leg-std", "group": "FundingPips", "label": "FundingPips · Legacy Standard (Kauf vor 28.09.)", "limit": 1.2, "kind": "cut", "note": "Striking ab 1,2 % je Trade-Idee (8-%-Ziel, über 25K). Strikes verfallen nie.", "daily": [5, "max", "basis"], "maxloss": 10, "news": [5, "usd", "voller Trade-Gewinn wird gestrichen"], "hold": "Ausnahme: Trades, die mindestens 5 Std. vorher eröffnet wurden.", "weekend": "close", "daily_close": false, "lev": [5, null], "maxlots": null, "rules": ["Striking ab 1,2 % Verlust je Trade-Idee.", "Overnight erlaubt, Wochenende gesperrt (Auto-Close).", "Metalle-Hebel seit 22.10.26 nur 1:5.", "News ±5 Min: der ganze Trade-Gewinn wird gestrichen."]}, {"id": "t5-hs", "group": "The5ers", "label": "The5ers · High Stakes", "limit": null, "kind": "", "note": "Kein festes Limit – Overleveraging und Overexposure sind trotzdem verboten.", "daily": [5, "max", "basis"], "maxloss": 10, "news": [2, "usd", "Gewinn aus dem Fenster wird abgezogen"], "hold": "Halten durch die News ist erlaubt – nur keine Ausführung im Fenster.", "weekend": "allow", "daily_close": false, "lev": [25, 25], "maxlots": null, "rules": ["News ±2 Min: keine Order-Ausführung, Halten erlaubt. Gewinne aus dem Fenster werden abgezogen.", "Daily 5 % vom höheren Wert aus Balance und Equity des Vortags, Max 10 % statisch.", "Hebel Metalle und Indices 1:25.", "3 Profit-Tage ≥ 0,5 % – offiziell fürs Scaling, teils auch vor dem Payout angezeigt.", "Mindest-Payout 150 $ · News-Bracketing und abnorme Lotgrößen verboten."]}, {"id": "acg-pro10", "group": "Alpha Capital", "label": "Alpha Capital · Alpha Pro 10 %", "limit": 2.0, "kind": "hard", "note": "Max Risk Rule: 2 % offener Verlust je Asset (Equity), nur Verlust-Positionen werden addiert, Re-Entry binnen 10 Min zählt dazu. Bruch = Konto zu.", "daily": [5, "bal", "start"], "maxloss": 10, "news": [5, "acg", "Soft Breach – Gewinn nicht performance-fee-fähig"], "hold": "Halten erlaubt, wenn der Trade mehr als 5 Min vorher eröffnet wurde – SL/TP-Trigger im Fenster zählt aber.", "weekend": "soft", "daily_close": false, "lev": null, "maxlots": null, "rules": ["Max Risk Rule: mehr als 2 % offener Verlust in einem Asset schließt das ganze Konto.", "News ±5 Min – bei Gold auch AUD-, CAD- und Top-Daten aller Währungen sowie EUR/GBP-Reden.", "Wochenende halten = Soft Breach. Über Nacht ist erlaubt.", "Daily 5 % (Balance), Max 10 % statisch.", "Bi-Weekly: 1. Antrag erst nach 5 Handelstagen · On-Demand: 40 % Best-Day + 2 % Gewinn."]}, {"id": "acg-pro8", "group": "Alpha Capital", "label": "Alpha Capital · Alpha Pro 8 %", "limit": 2.0, "kind": "hard", "note": "Max Risk Rule: 2 % offener Verlust je Asset. Bruch = Konto zu.", "daily": [4, "bal", "start"], "maxloss": 8, "news": [5, "acg", "Soft Breach"], "hold": "Halten erlaubt, wenn der Trade mehr als 5 Min vorher eröffnet wurde.", "weekend": "soft", "daily_close": false, "lev": null, "maxlots": null, "rules": ["Max Risk Rule: 2 % offener Verlust je Asset = Konto zu.", "News ±5 Min – bei Gold auch AUD/CAD und Top-Daten aller Währungen.", "Wochenende halten = Soft Breach.", "Daily 4 %, Max 8 % statisch."]}, {"id": "acg-pro6", "group": "Alpha Capital", "label": "Alpha Capital · Alpha Pro 6 %", "limit": 2.0, "kind": "hard", "note": "Max Risk Rule: 2 % offener Verlust je Asset. Bruch = Konto zu.", "daily": [3, "max", "start"], "maxloss": 6, "news": [5, "acg", "Soft Breach"], "hold": "Halten erlaubt, wenn der Trade mehr als 5 Min vorher eröffnet wurde.", "weekend": "soft", "daily_close": false, "lev": null, "maxlots": null, "rules": ["Max Risk Rule: 2 % offener Verlust je Asset = Konto zu.", "Daily nur 3 % (höchster Tagesend-Wert Balance/Equity), Max 6 % statisch.", "News ±5 Min – bei Gold auch AUD/CAD und Top-Daten aller Währungen.", "Wochenende halten = Soft Breach."]}, {"id": "acg-ftg", "group": "Alpha Capital", "label": "Alpha Capital · Focused Trader Group (1 %)", "limit": 1.0, "kind": "hard", "note": "1 % je Position und kumuliert. Nach ≥ 1 % Verlust ist das Symbol bis zum nächsten Handelstag gesperrt.", "daily": [5, "bal", "start"], "maxloss": 10, "news": [5, "acg", "Soft Breach"], "hold": "Halten erlaubt, wenn der Trade mehr als 5 Min vorher eröffnet wurde.", "weekend": "soft", "daily_close": false, "lev": [9, 10], "maxlots": 20, "rules": ["1 % Verlust je Position und kumuliert – danach ist das Symbol bis zum nächsten Handelstag gesperrt.", "Max. 20 Lots (100K), Hebel Metalle 1:9, Indices 1:10, keine EAs.", "Lot-Verstoß: 1. Mal ist der Mehr-Gewinn weg, 2. Mal verfällt die Auszahlung und das Konto wird deaktiviert.", "News ±5 Min – bei Gold auch AUD/CAD und Top-Daten aller Währungen.", "Ein abgelehnter Payout unterbricht die Kette für den Ausstieg."]}, {"id": "acg-swing", "group": "Alpha Capital", "label": "Alpha Capital · Alpha Swing", "limit": 2.0, "kind": "hard", "note": "Max Risk Rule: 2 % offener Verlust je Asset (Kauf ab 22.07.26). Bruch = Konto zu.", "daily": [5, "bal", "start"], "maxloss": 10, "news": [2, "acg", "Trade im Fenster muss länger als 2 Min laufen"], "hold": "Trades, die im ±2-Min-Fenster eröffnet werden, müssen länger als 2 Min offen bleiben.", "weekend": "allow", "daily_close": false, "lev": null, "maxlots": null, "rules": ["Max Risk Rule: 2 % offener Verlust je Asset = Konto zu.", "News ±2 Min: Trades im Fenster müssen länger als 2 Min laufen.", "Wochenende halten erlaubt – auch auf dem Qualified-Konto.", "Nur On-Demand: bester Tag ≤ 40 % und mind. 2 % Gewinn.", "Daily 5 %, Max 10 % statisch."]}, {"id": "fn-stellar", "group": "FundedNext", "label": "FundedNext · Stellar 2-Step", "limit": 3.0, "kind": "cut", "note": "Risk Limit 3 % kumuliert ab Startkapital (realisiert + floating). 1. Verstoß: 100 % Gewinnabzug, 2. Verstoß: dauerhaft 1 %.", "daily": [5, "bal", "start"], "maxloss": 10, "news": [5, "usd", "nur 40 % des Gewinns zählen"], "hold": "Halten erlaubt – gezählt wird, was im Fenster geöffnet oder geschlossen wird (auch SL/TP).", "weekend": "allow", "daily_close": false, "lev": null, "maxlots": null, "rules": ["Max. 3 % Risiko gleichzeitig, gemessen am Startkapital. 2. Verstoß = dauerhaft 1 %.", "News ±5 Min: nur 40 % des Gewinns zählen, Verluste voll.", "Quick Strike: Trades unter 30 Sek. dürfen nicht 30 % des Zyklusgewinns erreichen.", "Daily 5 % vom Startkapital, Max 10 % statisch.", "Erster Reward nach 21 Tagen, danach alle 14 Tage."]}, {"id": "fn-lite", "group": "FundedNext", "label": "FundedNext · Stellar Lite", "limit": 3.0, "kind": "cut", "note": "Risk Limit 3 % jederzeit. 2. Verstoß: dauerhaft 1 %.", "daily": [4, "bal", "start"], "maxloss": 8, "news": [5, "usd", "nur 40 % des Gewinns zählen"], "hold": "", "weekend": "allow", "daily_close": false, "lev": null, "maxlots": null, "rules": ["Max. 3 % Risiko gleichzeitig.", "News ±5 Min: nur 40 % des Gewinns zählen.", "Daily 4 %, Max 8 % statisch.", "Erster Reward nach 10 Tagen, danach alle 14 Tage."]}, {"id": "fn-1", "group": "FundedNext", "label": "FundedNext · 1-%-Einstufung / DTP", "limit": 1.0, "kind": "cut", "note": "1 % über alle offenen Positionen. Im DTP: Margin max. 30 %, News-Trading verboten, ab 2. Verstoß Split 50/50.", "daily": [5, "bal", "start"], "maxloss": 10, "news": [5, "dtp", "im DTP komplett verboten"], "hold": "", "weekend": "allow", "daily_close": false, "lev": null, "maxlots": null, "rules": ["Max. 1 % Risiko je Trade über alle offenen Positionen.", "News-Trading komplett verboten.", "Margin max. 30 % · neue Konten max. 50.000 $.", "Ab dem 2. Verstoß Split dauerhaft 50/50.", "Raus: 30.000 $ Gesamtgewinn und 5 Reward-Zyklen, dann Antrag beim Trading Ethics Team."]}, {"id": "bf-bright", "group": "BrightFunded", "label": "BrightFunded · 2-Step Bright", "limit": null, "kind": "", "note": "Kein festes Limit – Overleveraging und Overexposure sind verboten.", "daily": [4, "max", "start"], "maxloss": 8, "news": [5, "usd", "Gewinn dieses Trades entfällt"], "hold": "Halten und Ändern erlaubt, wenn der Trade mehr als 5 Min vorher eröffnet wurde. TP aus Trades ≥ 48 Std. alt zählt voll.", "weekend": "allow", "daily_close": false, "lev": null, "maxlots": null, "rules": ["News ±5 Min: kein Öffnen und Schließen (auch SL/TP). Nur der Gewinn dieses Trades entfällt.", "Daily 4 % der Startgröße vom höheren Wert Balance/Equity zum Rollover, Max 8 % statisch.", "Hedging nur im selben Konto, EAs erlaubt (nicht auf DXtrade).", "Ein Profil, eine KYC-Identität – Account Rolling verboten.", "Erster Payout 30 Tage nach dem ersten Funded-Trade."]}, {"id": "bf-classic", "group": "BrightFunded", "label": "BrightFunded · 2-Step Classic", "limit": null, "kind": "", "note": "Kein festes Limit – Overleveraging und Overexposure sind verboten.", "daily": [5, "max", "start"], "maxloss": 10, "news": [5, "usd", "Gewinn dieses Trades entfällt"], "hold": "Halten und Ändern erlaubt, wenn der Trade mehr als 5 Min vorher eröffnet wurde.", "weekend": "allow", "daily_close": false, "lev": null, "maxlots": null, "rules": ["News ±5 Min: kein Öffnen und Schließen (auch SL/TP). Nur der Gewinn dieses Trades entfällt.", "Daily 5 % der Startgröße vom höheren Wert Balance/Equity zum Rollover, Max 10 % statisch.", "Hedging nur im selben Konto, EAs erlaubt (nicht auf DXtrade).", "Erster Payout 30 Tage nach dem ersten Funded-Trade."]}, {"id": "custom", "group": "Sonstiges", "label": "Eigenes Limit …", "limit": null, "kind": "custom", "note": "Eigenes Limit pro Trade in % vom Startkapital.", "daily": [5, "bal", "start"], "maxloss": 10, "news": [5, "usd", "selbst prüfen"], "hold": "", "weekend": "allow", "daily_close": false, "lev": null, "maxlots": null, "rules": ["Eigenes Limit pro Trade – Daily 5 % und Max 10 % als Standard angenommen.", "News: als Vorsicht ±5 Min um USD-High-Impact-Events."]}];
+const LEGACY_PRESETS = {"acg-mrr": "acg-pro10", "acg-ftg": "acg-ftg", "fn-std": "fn-stellar", "fn-1": "fn-1", "fp-od": "fp-flex-od", "fp-leg-std": "fp-leg-std", "fp-leg-flex": "fp-leg-flex", "ftmo": "ftmo-normal", "t5": "t5-hs", "bf": "bf-bright", "custom": "custom", "none": "none"};
+const PROFILE_STAND = "04.11.2026";
+const NEWS_FIRMS = [["ftmo-normal", "FTMO Normal"], ["fp-flex", "FundingPips"], ["t5-hs", "The5ers"], ["acg-pro10", "Alpha Capital"], ["fn-stellar", "FundedNext"], ["bf-bright", "BrightFunded"]];
+const FIRM_NAMES = {"ftmo": "FTMO", "fp": "FundingPips", "t5": "The5ers", "acg": "Alpha Capital", "fn": "FundedNext", "bf": "BrightFunded"};
 const INSTRUMENTS = [{"id": "XAUUSD", "label": "XAUUSD · Gold", "ppl": 100, "dec": 2, "hint": "1 Lot = 100 oz → 1,00 $ Kursbewegung = 100 $ je Lot"}, {"id": "XAGUSD", "label": "XAGUSD · Silber", "ppl": 5000, "dec": 3, "hint": "1 Lot = 5.000 oz → 0,01 $ Kursbewegung = 50 $ je Lot"}, {"id": "US30", "label": "US30 · Dow", "ppl": 1, "dec": 1, "hint": "Kontraktgröße ist broker-abhängig – Standard 1 $ je Punkt je Lot, im Terminal prüfen"}, {"id": "NAS100", "label": "NAS100 · Nasdaq", "ppl": 1, "dec": 1, "hint": "Kontraktgröße ist broker-abhängig – Standard 1 $ je Punkt je Lot, im Terminal prüfen"}, {"id": "SPX500", "label": "SPX500 · S&P 500", "ppl": 1, "dec": 1, "hint": "Kontraktgröße ist broker-abhängig – Standard 1 $ je Punkt je Lot, im Terminal prüfen"}, {"id": "CUSTOM", "label": "Eigenes Instrument", "ppl": 1, "dec": 2, "hint": "Wert je 1,00 Kursbewegung je Lot selbst eintragen"}];
 const PAYOUT_DATES = [["ftmo", "FTMO", 14, "1. Trade", "Bi-Weekly-Zyklus · on-demand umstellbar", 14], ["fp-w", "FundingPips · Weekly", 7, "1. Trade", "ab 1. Trade auf dem Master", 7], ["fp-bw", "FundingPips · Bi-Weekly", 14, "1. Trade", "ab 1. Trade auf dem Master", 14], ["t5", "The5ers", 14, "Aktivierung", "ab Aktivierung des Funded-Kontos", 14], ["acg", "Alpha Capital", 14, "1. Trade", "1. Antrag: mind. 5 Handelstage", 14], ["fn", "FundedNext · Stellar 2-Step", 21, "1. Trade", "Standard-Zyklus", 14], ["fn-lite", "FundedNext · Stellar Lite", 10, "1. Trade", "danach Bi-Weekly", 14], ["bf", "BrightFunded", 30, "1. Trade", "ab 1. Funded-Trade", 14]];
 const CONS_RULES = [{"id": "ftmo-2s", "firm": "ftmo", "label": "2-Step Normal / Swing", "pct": null, "basis": "net", "days": null, "minp": null, "scope": "Challenge + FTMO Account", "note": "Keine Consistency-Regel. Es gelten nur die 4 Mindesthandelstage je Phase.", "src": "https://ftmo.com/en/trading-objectives/", "conf": "off"}, {"id": "ftmo-1s", "firm": "ftmo", "label": "1-Step · Kauf ab 12.10.2026", "pct": 0.5, "basis": "net", "days": null, "minp": null, "scope": "Bestehen der Challenge und jeder Reward", "note": "Bester Tag ≤ 50 % vom Gesamtgewinn – Verlusttage ziehen ab. Kein Breach: du musst nur weitertraden, bis es passt.", "src": "https://ftmo.com/en/blog/trading-updates/trading-update-8-oct-2026/", "conf": "off"}, {"id": "ftmo-1s-old", "firm": "ftmo", "label": "1-Step · Kauf vor 12.10.2026 (Best Day Rule)", "pct": 0.5, "basis": "pos", "days": null, "minp": null, "scope": "Bestehen der Challenge und jeder Reward", "note": "Alte Best Day Rule: bester Tag ≤ 50 % der Summe aller Plus-Tage. Verlusttage zählen nicht.", "src": "https://ftmo.com/en/trading-objectives/", "conf": "off"}, {"id": "ftmo-inst", "firm": "ftmo", "label": "Instant", "pct": 0.3, "basis": "net", "days": null, "minp": null, "scope": "jeder Reward", "note": "Bester Tag ≤ 30 % vom Gesamtgewinn. Nach jedem Reward startet die Rechnung bei 0.", "src": "https://ftmo.com/en/trading-objectives/", "conf": "off"}, {"id": "fp-flex-80", "firm": "fp", "label": "2-Step Flex · Bi-Weekly 80 %", "pct": null, "basis": "net", "days": null, "minp": null, "scope": "Master", "note": "Keine Consistency-Regel – nur der 14-Tage-Zyklus.", "src": "https://help.fundingpips.com/hc/en-us/articles/47835196271249-2-Step-Flex", "conf": "off"}, {"id": "fp-flex-95", "firm": "fp", "label": "2-Step Flex · Bi-Weekly 95 %", "pct": null, "basis": "net", "days": [3, 0.5], "minp": null, "scope": "jeder Reward", "note": "Keine %-Regel, aber 3 Profit-Tage mit je mind. 0,5 % im Zyklus.", "src": "https://help.fundingpips.com/hc/en-us/articles/47835196271249-2-Step-Flex", "conf": "off"}, {"id": "fp-flex-od", "firm": "fp", "label": "2-Step Flex · On-Demand 100 %", "pct": 0.35, "basis": "net", "days": [7, 0.5], "minp": 1, "scope": "jeder On-Demand-Reward", "note": "Kein Tag über 35 % vom Gewinn, dazu 7 Profit-Tage ≥ 0,5 %. Setzt nach jedem Reward zurück. Konto läuft im Striking System.", "src": "https://help.fundingpips.com/hc/en-us/articles/47835196271249-2-Step-Flex", "conf": "off"}, {"id": "fp-std-cycle", "firm": "fp", "label": "2-Step Standard · Weekly / Bi-Weekly", "pct": null, "basis": "net", "days": null, "minp": 1, "scope": "Master", "note": "Keine Consistency-Regel bei Weekly (60 %) und Bi-Weekly (80 %).", "src": "https://help.fundingpips.com/hc/en-us/articles/34501809112081-2-Step-Standard", "conf": "off"}, {"id": "fp-std-od", "firm": "fp", "label": "2-Step Standard · On-Demand 100 %", "pct": 0.35, "basis": "net", "days": [7, 0.5], "minp": 1, "scope": "jeder On-Demand-Reward", "note": "Kein Tag über 35 % vom Gewinn, dazu 7 Profit-Tage ≥ 0,5 %. Setzt nach jedem Reward zurück. Konto läuft im Striking System.", "src": "https://help.fundingpips.com/hc/en-us/articles/34501809112081-2-Step-Standard", "conf": "off"}, {"id": "fp-pro-w", "firm": "fp", "label": "2-Step Pro · Weekly 80 %", "pct": null, "basis": "net", "days": null, "minp": 1, "scope": "Master", "note": "Keine Consistency-Regel im Weekly-Zyklus.", "src": "https://help.fundingpips.com/hc/en-us/articles/34502027344017-2-Step-Pro-Model", "conf": "off"}, {"id": "fp-pro-od", "firm": "fp", "label": "2-Step Pro · On-Demand 100 %", "pct": 0.35, "basis": "net", "days": [7, 0.5], "minp": 1, "scope": "jeder On-Demand-Reward", "note": "Kein Tag über 35 % vom Gewinn, dazu 7 Profit-Tage ≥ 0,5 %. Setzt nach jedem Reward zurück.", "src": "https://help.fundingpips.com/hc/en-us/articles/34502027344017-2-Step-Pro-Model", "conf": "off"}, {"id": "fp-1s-od", "firm": "fp", "label": "1-Step · On-Demand", "pct": 0.35, "basis": "net", "days": null, "minp": 2, "scope": "On-Demand-Reward", "note": "35 % laut Drittquellen, offiziell nicht geprüft. Weekly, Bi-Weekly und Monthly ohne %-Regel.", "src": "https://propvator.com/blog/does-funding-pips-have-a-consistency-rule/", "conf": "dritt"}, {"id": "fp-zero", "firm": "fp", "label": "Zero (Instant)", "pct": 0.15, "basis": "net", "days": [7, 0.25], "minp": null, "scope": "jeder Reward", "note": "Bester Tag ≤ 15 %, 7 Profit-Tage ≥ 0,25 % in 30 Tagen. Zusätzlich: größter Verlusttag ≤ größter Gewinntag, die ersten 3 % Gewinn sind Puffer.", "src": "https://propvator.com/blog/does-funding-pips-have-a-consistency-rule/", "conf": "dritt"}, {"id": "t5-hs", "firm": "t5", "label": "High Stakes (New / Classic)", "pct": null, "basis": "net", "days": [3, 0.5], "minp": null, "scope": "Scaling – teils auch vor dem Payout angezeigt", "note": "Keine %-Regel. 3 Profit-Tage mit je mind. 0,5 % (geschlossene Trades). Offiziell fürs Scaling, manche Funded-Dashboards zeigen sie seit Ende Okt. auch beim Payout. Mindest-Payout 150 $.", "src": "https://the5ers.com/high-stakes/", "conf": "user"}, {"id": "t5-summer", "firm": "t5", "label": "Summer Plan (befristet)", "pct": 0.5, "basis": "net", "days": null, "minp": null, "scope": "jeder Payout", "note": "Kein Tag über 50 % vom Gesamtgewinn zum Zeitpunkt des Antrags. Mindest-Payout 250 $.", "src": "https://the5ers.com/summer-plan/", "conf": "off"}, {"id": "t5-pg", "firm": "t5", "label": "Pro Growth", "pct": null, "basis": "net", "days": [3, 0.5], "minp": null, "scope": "Funded", "note": "Keine %-Regel, 3 Profit-Tage mit je mind. 0,5 % (laut Capital Critic).", "src": "https://www.capitalcritic.com/forex-prop-firms/the5ers", "conf": "dritt"}, {"id": "t5-other", "firm": "t5", "label": "Hyper Growth / Bootcamp", "pct": null, "basis": "net", "days": null, "minp": null, "scope": "–", "note": "Keine Consistency-Regel öffentlich dokumentiert.", "src": "https://the5ers.com/high-stakes/", "conf": "off"}, {"id": "acg-pro-od", "firm": "acg", "label": "Alpha Pro · On-Demand", "pct": 0.4, "basis": "net", "days": null, "minp": 2, "scope": "jeder On-Demand-Antrag", "note": "Bester Tag netto ÷ Gesamtgewinn netto ≤ 40 %, dazu mind. 2 % Gewinn. Eine Teil-Auszahlung setzt den Score auf 0.", "src": "https://help.alphacapitalgroup.uk/en/articles/10102634-performance-fee-on-demand", "conf": "off"}, {"id": "acg-pro-bw", "firm": "acg", "label": "Alpha Pro · Bi-Weekly", "pct": null, "basis": "net", "days": [5, null], "minp": null, "scope": "1. Antrag", "note": "Keine %-Regel. 1. Antrag: mind. 5 Handelstage (Trade am selben Tag auf und zu), mind. 100 $ Gewinn.", "src": "https://help.alphacapitalgroup.uk/en/articles/10570531-performance-fee-bi-weekly", "conf": "off"}, {"id": "acg-swing", "firm": "acg", "label": "Alpha Swing (nur On-Demand)", "pct": 0.4, "basis": "net", "days": null, "minp": 2, "scope": "jeder Antrag", "note": "Wie Pro On-Demand: bester Tag ≤ 40 %, mind. 2 % Gewinn.", "src": "https://help.alphacapitalgroup.uk/en/articles/10102634-performance-fee-on-demand", "conf": "off"}, {"id": "acg-one", "firm": "acg", "label": "Alpha One", "pct": 0.4, "basis": "net", "days": null, "minp": 2, "scope": "jeder Antrag", "note": "Bester Tag ≤ 40 %, mind. 2 % Gewinn.", "src": "https://help.alphacapitalgroup.uk/en/articles/10102634-performance-fee-on-demand", "conf": "off"}, {"id": "acg-direct", "firm": "acg", "label": "Alpha Direct", "pct": 0.15, "basis": "net", "days": null, "minp": 4, "scope": "jeder Antrag", "note": "Bester Tag ≤ 15 %. Erst 3 % Puffer, dann mind. 1 % darüber (= 4 % gesamt).", "src": "https://help.alphacapitalgroup.uk/en/articles/10102634-performance-fee-on-demand", "conf": "off"}, {"id": "fn-2s-std", "firm": "fn", "label": "Stellar 2-Step · Standard", "pct": null, "basis": "net", "days": null, "minp": null, "scope": "Funded", "note": "Keine Consistency-Regel. Reward nach 21 Tagen, danach alle 14 Tage, wenn im Plus.", "src": "https://help.fundednext.com/en/articles/17255124-stellar-2-step-challenge", "conf": "off"}, {"id": "fn-2s-od", "firm": "fn", "label": "Stellar 2-Step · On-Demand", "pct": 0.4, "basis": "net", "days": null, "minp": 2, "scope": "jeder On-Demand-Reward", "note": "Bester Tag ≤ 40 % vom Gesamtgewinn zum Zeitpunkt des Antrags, Konto mind. 2 % im Plus.", "src": "https://help.fundednext.com/en/articles/17255124-stellar-2-step-challenge", "conf": "off"}, {"id": "fn-2s-3d", "firm": "fn", "label": "Stellar 2-Step · 3-Tage-Zyklus", "pct": null, "basis": "net", "days": [3, 1.0], "minp": null, "scope": "jeder 3-Tage-Zyklus", "note": "Keine %-Regel, aber 3 Profit-Tage mit je mind. 1 % pro Zyklus.", "src": "https://help.fundednext.com/en/articles/17255124-stellar-2-step-challenge", "conf": "off"}, {"id": "fn-lite-od", "firm": "fn", "label": "Stellar Lite · On-Demand", "pct": 0.4, "basis": "net", "days": null, "minp": 2, "scope": "jeder On-Demand-Reward", "note": "Bester Tag ≤ 40 %, Konto mind. 2 % im Plus.", "src": "https://help.fundednext.com/en/articles/17253939-stellar-lite-account", "conf": "off"}, {"id": "fn-lite-3d", "firm": "fn", "label": "Stellar Lite · 3-Tage-Zyklus", "pct": null, "basis": "net", "days": [3, 1.0], "minp": null, "scope": "jeder 3-Tage-Zyklus", "note": "3 Profit-Tage mit je mind. 1 % pro Zyklus.", "src": "https://help.fundednext.com/en/articles/17253939-stellar-lite-account", "conf": "off"}, {"id": "fn-other", "firm": "fn", "label": "Stellar 1-Step / Instant", "pct": null, "basis": "net", "days": null, "minp": null, "scope": "–", "note": "Keine Consistency-Regel. Instant: mind. 1 % Wachstum (On-Demand 5 %).", "src": "https://help.fundednext.com/en/articles/17253243-stellar-instant-account", "conf": "off"}, {"id": "bf-all", "firm": "bf", "label": "Alle Pläne (Bright, Classic, 1-Step)", "pct": null, "basis": "net", "days": null, "minp": null, "scope": "–", "note": "BrightFunded hat offiziell keine Consistency-Regel.", "src": "https://help.brightfunded.com/en/articles/12577176-does-brightfunded-have-a-consistency-rule", "conf": "off"}, {"id": "custom", "firm": "custom", "label": "Eigene Regel", "pct": 0.4, "basis": "net", "days": null, "minp": null, "scope": "frei einstellbar", "note": "Prozent, Bezug, Profit-Tage und Mindestgewinn selbst festlegen.", "src": "", "conf": "off"}];
@@ -2482,10 +2950,11 @@ function numVal(el){
 }
 
 /* ---------- Registerkarten ---------- */
-const TAB_IDS = ["markt", "regeln", "cc", "payout", "calc", "cons", "fx"];
+const TAB_IDS = ["markt", "regeln", "cc", "payout", "calc", "cons", "track", "logs"];
 let chartMounted = false;
 function showTab(id, opts){
   opts = opts || {};
+  if(id === "fx") id = "track";
   if(TAB_IDS.indexOf(id) < 0) id = "markt";
   document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("active", p.dataset.tab === id));
   document.querySelectorAll(".tab-btn").forEach(b => {
@@ -2604,21 +3073,159 @@ document.querySelectorAll(".ccf").forEach(item => {
   btn.addEventListener("click", () => { open = !open; set(open); });
 })();
 
-/* ---------- Calculator ---------- */
+/* ---------- Konto-Profile, News-Sperren, Uhrzeiten ---------- */
 const PRESET_MAP = {};
 CALC_PRESETS.forEach(p => { PRESET_MAP[p.id] = p; });
 const INSTR_MAP = {};
 INSTRUMENTS.forEach(i => { INSTR_MAP[i.id] = i; });
+const NEWS_TOP = /(interest rate|rate decision|rate statement|cash rate|policy rate|bank rate|refinancing|monetary policy|fomc|cpi|consumer price|gdp|gross domestic|pce|pmi|non-farm|nonfarm|employment change|unemployment|payroll|jobless|average hourly)/i;
+const NEWS_SPEECH = /(speaks|speech|testifies|press conference)/i;
+function newsMatch(scope, instId, e){
+  if(typeof effImpact === "function" ? effImpact(e) !== "High" : e.impact !== "High") return false;
+  const metal = instId === "XAUUSD" || instId === "XAGUSD";
+  if(scope === "acg" && metal){
+    if(["USD", "AUD", "CAD"].indexOf(e.country) > -1) return true;
+    if(NEWS_TOP.test(e.title)) return true;
+    return (e.country === "EUR" || e.country === "GBP") && NEWS_SPEECH.test(e.title);
+  }
+  return e.country === "USD";
+}
+/* Gesperrte Zeitfenster eines Profils (zusammengelegt), ab "from" für "horizon" ms */
+function newsBlocks(prof, instId, from, horizon){
+  if(!prof || !prof.news || typeof events === "undefined" || !events.length) return null;
+  const win = prof.news[0] * 60000, scope = prof.news[1];
+  const raw = [];
+  events.forEach(e => {
+    if(e.allDay || !e.ts || !newsMatch(scope, instId, e)) return;
+    const dur = NEWS_SPEECH.test(e.title) ? 60 * 60000 : 0;
+    const a = e.ts - win, b = e.ts + dur + win;
+    if(b < from || a > from + horizon) return;
+    raw.push({a, b, ts: e.ts, t: e.country + " " + e.title, speech: dur > 0});
+  });
+  raw.sort((x, y) => x.a - y.a);
+  const out = [];
+  raw.forEach(x => {
+    const l = out[out.length - 1];
+    if(l && x.a <= l.b){ l.b = Math.max(l.b, x.b); if(l.titles.indexOf(x.t) < 0) l.titles.push(x.t); l.speech = l.speech || x.speech; }
+    else out.push({a: x.a, b: x.b, ts: x.ts, titles: [x.t], speech: x.speech});
+  });
+  return out;
+}
+const fmtClock = new Intl.DateTimeFormat("de-DE", {hour:"2-digit", minute:"2-digit", timeZone: TZ});
+const fmtWdHM = new Intl.DateTimeFormat("de-DE", {weekday:"short", day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit", timeZone: TZ});
+function fmtSpan(ms){
+  const m = Math.max(0, Math.round(ms / 60000));
+  if(m < 60) return m + " Min";
+  const h = Math.floor(m / 60), r = m % 60;
+  if(h < 24) return h + " Std" + (r ? " " + r + " Min" : "");
+  const d = Math.floor(h / 24);
+  return d + (d === 1 ? " Tag " : " Tage ") + (h % 24) + " Std";
+}
+const NY_FMT = new Intl.DateTimeFormat("en-US", {timeZone:"America/New_York", weekday:"short", hour:"2-digit", minute:"2-digit", hourCycle:"h23"});
+function nyNow(d){
+  const o = {};
+  NY_FMT.formatToParts(d || new Date()).forEach(p => { o[p.type] = p.value; });
+  return {wd: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(o.weekday), min: (+o.hour % 24) * 60 + (+o.minute)};
+}
+const NY_CLOSE = 17 * 60, FP_CLOSE = 16 * 60 + 45;
+function newsCheck(prof, instId, now){
+  if(!prof || prof.id === "none") return null;
+  if(!prof.news) return {lvl:"ok", t:"News", x:"Keine News-Regel für dieses Konto."};
+  const bl = newsBlocks(prof, instId, now - 3 * 3600000, 8 * 86400000);
+  if(bl === null) return {lvl:"info", t:"News", x:"News-Feed noch nicht geladen – vor dem Trade den Kalender prüfen."};
+  const win = "±" + prof.news[0] + " Min";
+  const cur = bl.find(b => b.a <= now && now <= b.b);
+  const fol = prof.news[2] ? " Folge: " + prof.news[2] + "." : "";
+  if(cur) return {lvl:"bad", t:"News – jetzt gesperrt", x:"Bis " + fmtClock.format(new Date(cur.b)) + " Uhr (" + win + "): " + cur.titles.join(", ") + "." + fol};
+  const nx = bl.find(b => b.a > now);
+  if(!nx) return {lvl:"ok", t:"News", x:"Keine gesperrten Events in den nächsten Tagen im Feed (" + win + ")."};
+  const left = nx.a - now;
+  const span = fmtClock.format(new Date(nx.a)) + "–" + fmtClock.format(new Date(nx.b)) + " Uhr";
+  if(left <= 30 * 60000) return {lvl:"warn", t:"News in " + fmtSpan(left), x:span + ": " + nx.titles.join(", ") + "." + fol + (prof.hold ? " " + prof.hold : "")};
+  return {lvl:"ok", t:"News", x:"Nächste Sperre " + fmtWdHM.format(new Date(nx.a)) + " Uhr (in " + fmtSpan(left) + "): " + nx.titles.slice(0, 2).join(", ") + (nx.speech ? " · Rede: Ende geschätzt" : "") + "."};
+}
+function timeCheck(prof, now){
+  if(!prof || prof.id === "none") return null;
+  const ny = nyNow(new Date(now));
+  const closedWk = ny.wd === 6 || (ny.wd === 0 && ny.min < NY_CLOSE) || (ny.wd === 5 && ny.min >= NY_CLOSE);
+  if(closedWk){
+    /* Öffnung = Sonntag 17:00 New York – in 30-Min-Schritten suchen, dann minutengenau */
+    const isOpen = t => { const n = nyNow(new Date(t)); return n.wd === 0 && n.min >= NY_CLOSE; };
+    let t = now; while(!isOpen(t) && t - now < 4 * 86400000) t += 30 * 60000;
+    while(isOpen(t - 60000)) t -= 60000;
+    return {lvl:"info", t:"Markt", x:"Wochenende – der Markt ist geschlossen. Öffnet Sonntag " + fmtClock.format(new Date(t)) + " Uhr deutscher Zeit."};
+  }
+  const at = m => fmtClock.format(new Date(now + (m - ny.min) * 60000));
+  if(prof.daily_close){
+    const left = FP_CLOSE - ny.min;
+    if(left <= 0 && ny.min < NY_CLOSE) return {lvl:"bad", t:"Auto-Close läuft", x:"FundingPips schließt gerade alle offenen Trades (bis " + at(NY_CLOSE) + " Uhr)."};
+    if(left > 0 && left <= 15) return {lvl:"bad", t:"Auto-Close in " + left + " Min", x:"Um " + at(FP_CLOSE) + " Uhr werden alle Trades geschlossen – ohne Swing-Add-on kein Halten über Nacht."};
+    if(left > 0 && left <= 90) return {lvl:"warn", t:"Auto-Close in " + fmtSpan(left * 60000), x:"Um " + at(FP_CLOSE) + " Uhr schließt das System alle Trades."};
+    return {lvl:"ok", t:"Über Nacht", x:"Kein Halten über Nacht: Auto-Close täglich um " + at(FP_CLOSE) + " Uhr (ohne Swing-Add-on)."};
+  }
+  if(prof.weekend === "close" || prof.weekend === "soft"){
+    const what = prof.weekend === "soft" ? "Halten übers Wochenende = Soft Breach" : "vor dem Wochenende alles schließen";
+    if(ny.wd === 5){
+      const left = NY_CLOSE - ny.min;
+      if(left <= 30) return {lvl:"bad", t:"Wochenende in " + left + " Min", x:"Marktschluss " + at(NY_CLOSE) + " Uhr – " + what + "."};
+      if(left <= 180) return {lvl:"warn", t:"Wochenende in " + fmtSpan(left * 60000), x:"Marktschluss " + at(NY_CLOSE) + " Uhr – " + what + "."};
+    }
+    return {lvl:"ok", t:"Wochenende", x:"Freitag bis " + at(NY_CLOSE) + " Uhr " + (prof.weekend === "soft" ? "schließen (sonst Soft Breach)." : "alles schließen.")};
+  }
+  return {lvl:"ok", t:"Über Nacht / Wochenende", x:"Halten erlaubt" + (prof.id === "t5-hs" ? " – bei Indices dreifacher Wochenend-Swap." : ".")};
+}
+function dayRoom(prof, start, size, dbal, deq, eqnow){
+  if(!prof || prof.id === "none" || !(dbal > 0) || !(start > 0)) return null;
+  const [dp, basis, of] = prof.daily;
+  const bv = basis === "max" ? Math.max(dbal, deq > 0 ? deq : 0) : dbal;
+  const ref = of === "start" ? start : bv;
+  const floorD = bv - ref * dp / 100;
+  const floorM = start * (1 - prof.maxloss / 100);
+  const eq = eqnow > 0 ? eqnow : size;
+  return {eq, floorD, floorM, roomD: eq - floorD, roomM: eq - floorM, room: Math.min(eq - floorD, eq - floorM), dp, basis, of};
+}
 
+/* ---------- Regel-Pop-up ---------- */
+const RModal = (function(){
+  const el = document.getElementById("rmodal");
+  if(!el) return {show(){}};
+  const title = el.querySelector("#rm-title"), list = el.querySelector(".rm-list"), note = el.querySelector(".rm-note"), mute = el.querySelector(".rm-mute input");
+  let curId = null, lastFocus = null;
+  const today = () => new Date().toISOString().slice(0, 10);
+  function close(){
+    if(curId && mute.checked) store.set("pd:rmute:" + curId, today());
+    el.hidden = true; document.body.classList.remove("rm-open");
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  el.addEventListener("click", e => { if(e.target === el || e.target.closest(".rm-x") || e.target.closest(".rm-ok")) close(); });
+  document.addEventListener("keydown", e => { if(e.key === "Escape" && !el.hidden) close(); });
+  list.addEventListener("click", e => { const li = e.target.closest("li"); if(li) li.classList.toggle("done"); });
+  return {
+    show(prof, force, extra){
+      if(!prof || prof.id === "none" || !prof.rules || !prof.rules.length) return;
+      if(!force && store.get("pd:rmute:" + prof.id) === today()) return;
+      curId = prof.id; lastFocus = document.activeElement;
+      title.textContent = prof.label;
+      list.innerHTML = prof.rules.map(r => '<li><span class="rm-ck" aria-hidden="true"></span><span>' + esc(r) + "</span></li>").join("");
+      note.innerHTML = extra || "";
+      mute.checked = false;
+      el.hidden = false; document.body.classList.add("rm-open");
+      const ok = el.querySelector(".rm-ok"); if(ok) ok.focus();
+    }
+  };
+})();
+
+/* ---------- Calculator mit Ampel ---------- */
 function initCalc(root){
   const KEY = "pd:calc:" + root.dataset.calc;
   const q = s => root.querySelector(s);
   const E = {
-    name:q(".calc-name"), preset:q(".c-preset"), custWrap:q(".c-custom"), cust:q(".c-custlim"),
+    name:q(".calc-name"), preset:q(".c-preset"), rulesBtn:q(".c-rules-btn"), custWrap:q(".c-custom"), cust:q(".c-custlim"),
     size:q(".c-size"), start:q(".c-start"), risk:q(".c-risk"), minus:q(".st-minus"), plus:q(".st-plus"),
     chips:root.querySelectorAll(".chips button"),
+    dbal:q(".c-dbal"), deq:q(".c-deq"), eqnow:q(".c-eqnow"), dayOut:q(".day-out"), dayBox:q(".day-box"),
     loss:q(".c-loss"), lossSub:q(".c-loss-sub"), slbal:q(".c-slbal"), slbalSub:q(".c-slbal-sub"),
-    limit:q(".c-limit"), inst:q(".c-inst"), ppl:q(".c-ppl"), instHint:q(".c-inst-hint"),
+    ampel:q(".c-ampel"), limit:q(".c-limit"), inst:q(".c-inst"), ppl:q(".c-ppl"), instHint:q(".c-inst-hint"), lev:q(".c-lev"),
     dir:root.querySelectorAll(".c-dir button"), mode:root.querySelectorAll(".c-mode button"),
     lots:q(".c-lots"), sld:q(".c-sld"), entry:q(".c-entry"), lotsWrap:q(".c-lots-wrap"), sldWrap:q(".c-sld-wrap"),
     o1l:q(".c-o1-l"), o1:q(".c-o1"), o1s:q(".c-o1-s"), o2:q(".c-o2"), o2s:q(".c-o2-s"),
@@ -2626,35 +3233,56 @@ function initCalc(root){
   };
   const defaults = {dir:"long", mode:"lots", risk:"1", inst:"XAUUSD", preset:"none"};
   let st = Object.assign({}, defaults, store.get(KEY) || {});
+  if(st.preset && !PRESET_MAP[st.preset]) st.preset = LEGACY_PRESETS[st.preset] || "none";
 
-  const fields = ["name", "preset", "cust", "size", "start", "risk", "inst", "ppl", "lots", "sld", "entry"];
+  const fields = ["name", "preset", "cust", "size", "start", "risk", "inst", "ppl", "lots", "sld", "entry", "dbal", "deq", "eqnow", "lev"];
   fields.forEach(f => { if(st[f] != null && E[f]) E[f].value = st[f]; });
   if(!E.preset.value) E.preset.value = "none";
   if(!E.inst.value) E.inst.value = "XAUUSD";
   if(!E.ppl.value) E.ppl.value = INSTR_MAP[E.inst.value].ppl;
+  if(st.dayOpen) E.dayBox.open = true;
 
   function save(){
     fields.forEach(f => { st[f] = E[f].value; });
+    st.dayOpen = E.dayBox.open;
     store.set(KEY, st);
   }
   function setSeg(list, val, attr){
     list.forEach(b => b.classList.toggle("active", b.dataset[attr] === val));
     requestAnimationFrame(() => { if(window.__placeGliders) window.__placeGliders(); });
   }
+  const prof = () => PRESET_MAP[E.preset.value] || PRESET_MAP.none;
+  function autoLev(){
+    const p = prof(), inst = E.inst.value;
+    if(!p.lev){ if(st.levAuto){ E.lev.value = ""; st.levAuto = false; } return; }
+    const v = (inst === "XAUUSD" || inst === "XAGUSD") ? p.lev[0] : (inst === "CUSTOM" ? null : p.lev[1]);
+    if(v && (!E.lev.value || st.levAuto)){ E.lev.value = v; st.levAuto = true; }
+    else if(!v && st.levAuto){ E.lev.value = ""; st.levAuto = false; }
+  }
+  function rulesExtra(p){
+    const startRaw = numVal(E.start), start = startRaw > 0 ? startRaw : numVal(E.size);
+    const parts = [];
+    if(p.limit) parts.push("<b>Limit pro Trade:</b> " + nf(p.limit, p.limit % 1 ? 1 : 0) + " %" + (start > 0 ? " = " + usd(start * p.limit / 100) : ""));
+    if(p.maxlots) parts.push("<b>Max. Lots:</b> " + p.maxlots);
+    const n = newsCheck(p, E.inst.value, Date.now());
+    if(n) parts.push("<b>" + esc(n.t) + ":</b> " + esc(n.x));
+    return parts.join("<br>") + '<br><span class="rm-src">Stand ' + PROFILE_STAND + ' – Details im Reiter Regeln.</span>';
+  }
 
   function update(){
     const size = numVal(E.size), risk = numVal(E.risk);
     const valid = size > 0 && risk > 0;
     const loss = valid ? size * risk / 100 : NaN;
+    const p = prof();
 
     E.loss.textContent = valid ? usd(loss) : "—";
     E.lossSub.textContent = valid ? nf(risk, risk % 1 ? 2 : 0) + " % von " + nf(size, 0) + " $" : "Account-Size und Risiko eintragen";
     E.slbal.textContent = valid ? usd(size - loss) : "—";
     E.slbalSub.textContent = valid ? "Kontostand, wenn der SL greift" : "";
     E.chips.forEach(c => c.classList.toggle("on", valid && Math.abs(parseFloat(c.dataset.v) - risk) < 1e-9));
+    E.rulesBtn.hidden = p.id === "none";
 
     /* Firmenlimit */
-    const p = PRESET_MAP[E.preset.value] || PRESET_MAP.none;
     E.custWrap.hidden = p.id !== "custom";
     let lim = p.limit;
     if(p.id === "custom") lim = numVal(E.cust);
@@ -2662,11 +3290,13 @@ function initCalc(root){
     const start = startRaw > 0 ? startRaw : size;
     const box = E.limit;
     box.className = "limit-box c-limit";
+    const checks = [];
     if(p.id === "none"){
       box.innerHTML = "";
     }else if(lim == null || isNaN(lim) || lim <= 0){
       box.classList.add("show", "info");
       box.innerHTML = '<span class="lb-ic">i</span><span>' + esc(p.note || "Eigenes Limit in % eintragen.") + "</span>";
+      checks.push({lvl:"ok", t:"Risiko pro Trade", x: p.id === "custom" ? "Eigenes Limit eintragen." : "Kein festes Limit pro Trade – Daily und Max im Blick behalten."});
     }else{
       const limUsd = start * lim / 100;
       box.classList.add("show");
@@ -2682,16 +3312,41 @@ function initCalc(root){
           cls = "over"; ic = "!";
           head = "<b>Über dem Limit:</b> " + usd(loss) + " geplant, erlaubt sind " + usd(limUsd)
             + ". Bei dieser Account-Size max. <b>" + nf(maxPct, 2) + " %</b>.";
+          checks.push({lvl:"bad", t:"Risiko pro Trade", x:usd(loss) + " geplant – erlaubt sind " + usd(limUsd) + " (" + nf(lim, lim % 1 ? 1 : 0) + " %)."});
         }else if(ratio >= 0.9){
           cls = "near"; ic = "!";
           head = "<b>Knapp am Limit:</b> " + usd(loss) + " von " + usd(limUsd) + " (" + nf(ratio * 100, 0) + " %). Spread und Slippage können den Rest auffressen.";
+          checks.push({lvl:"warn", t:"Risiko pro Trade", x:nf(ratio * 100, 0) + " % des Limits – Spread und Slippage einplanen."});
         }else{
           cls = "ok"; ic = "✓";
           head = "<b>Im Rahmen:</b> " + usd(loss) + " von " + usd(limUsd) + " erlaubt (" + nf(ratio * 100, 0) + " % ausgeschöpft).";
+          checks.push({lvl:"ok", t:"Risiko pro Trade", x:usd(loss) + " von " + usd(limUsd) + " erlaubt."});
         }
         box.classList.add(cls);
         box.innerHTML = '<span class="lb-ic">' + ic + "</span><span>" + head + "<br>" + esc(p.note || "")
           + (startRaw > 0 ? "" : " <i>Basis: Account-Size – für das exakte Firmenlimit das Startkapital eintragen.</i>") + "</span>";
+      }
+    }
+
+    /* Tagesstand */
+    const dr = dayRoom(p, start, size, numVal(E.dbal), numVal(E.deq), numVal(E.eqnow));
+    if(p.id === "none"){
+      E.dayOut.innerHTML = '<p class="hint">Erst oben Firma &amp; Konto wählen.</p>';
+    }else if(!dr){
+      E.dayOut.innerHTML = '<p class="hint">Balance zum Tagesstart eintragen. Regel: Daily ' + p.daily[0] + " % "
+        + (p.daily[2] === "start" ? "vom Startkapital" : "vom Basiswert") + (p.daily[1] === "max" ? ", Basis = höherer Wert aus Balance und Equity" : ", Basis = Balance") + " · Max " + p.maxloss + " % statisch.</p>";
+      if(valid) checks.push({lvl:"info", t:"Tages-Spielraum", x:"Tagesstand eintragen, dann prüft die Ampel auch deinen Daily-Loss."});
+    }else{
+      const cls = v => v <= 0 ? "bad" : (valid && loss > v ? "bad" : (valid && loss > v * 0.7 ? "warn" : "ok"));
+      E.dayOut.innerHTML = '<div class="day-kpis">'
+        + '<div class="dk ' + cls(dr.roomD) + '"><span>Heute noch verlierbar</span><b>' + usd(Math.max(0, dr.roomD)) + "</b><small>Daily-Grenze bei " + usd(dr.floorD) + "</small></div>"
+        + '<div class="dk ' + cls(dr.roomM) + '"><span>Bis Max-Loss</span><b>' + usd(Math.max(0, dr.roomM)) + "</b><small>Max-Grenze bei " + usd(dr.floorM) + "</small></div></div>"
+        + '<p class="hint">Daily ' + dr.dp + " % " + (dr.of === "start" ? "vom Startkapital" : "vom Basiswert") + (dr.basis === "max" ? ", Basis = höherer Wert aus Balance und Equity" : ", Basis = Balance zum Tagesstart")
+        + ". Gerechnet mit Equity " + usd(dr.eq) + ". Rechenweg der Firma im Dashboard gegenchecken.</p>";
+      if(dr.room <= 0) checks.push({lvl:"bad", t:"Tages-Spielraum", x:"Grenze schon erreicht – heute nicht mehr handeln."});
+      else if(valid){
+        const lvl = loss > dr.room ? "bad" : (loss > dr.room * 0.7 ? "warn" : "ok");
+        checks.push({lvl, t:"Tages-Spielraum", x:"Noch " + usd(dr.room) + " Luft – dein Trade riskiert " + usd(loss) + (lvl === "bad" ? ". Trifft der SL, ist das Konto weg." : ".")});
       }
     }
 
@@ -2707,9 +3362,10 @@ function initCalc(root){
     E.lotsWrap.hidden = st.mode !== "lots";
     E.sldWrap.hidden = st.mode !== "sl";
 
-    let dist = NaN;
+    let dist = NaN, lotsUsed = NaN;
     if(st.mode === "lots"){
       const lots = numVal(E.lots);
+      lotsUsed = lots;
       dist = (valid && lots > 0) ? loss / (lots * ppl) : NaN;
       E.o1l.textContent = "SL-Abstand";
       E.o1.textContent = isNaN(dist) ? "—" : nf(dist, dec);
@@ -2717,11 +3373,13 @@ function initCalc(root){
     }else{
       dist = numVal(E.sld);
       const maxLots = (valid && dist > 0) ? Math.floor(loss / (dist * ppl) * 100 + 1e-9) / 100 : NaN;
+      lotsUsed = maxLots;
       E.o1l.textContent = "Max. Lots";
       E.o1.textContent = isNaN(maxLots) ? "—" : nf(maxLots, 2);
       E.o1s.textContent = isNaN(maxLots) ? (valid ? "SL-Abstand eintragen" : "") : "abgerundet · Verlust bei SL " + usd(maxLots * dist * ppl);
       if(!(dist > 0)) dist = NaN;
     }
+    let marginTxt = "";
     if(!isNaN(dist) && entry > 0){
       const sl = entry + sign * dist;
       E.o2.textContent = sl > 0 ? nf(sl, dec) : "—";
@@ -2730,7 +3388,45 @@ function initCalc(root){
       E.o2.textContent = "—";
       E.o2s.textContent = isNaN(dist) ? "" : "Einstiegskurs eintragen";
     }
+
+    /* Lots & Margin */
+    if(p.id !== "none" && lotsUsed > 0){
+      if(p.maxlots && lotsUsed > p.maxlots) checks.push({lvl:"bad", t:"Lots", x:nf(lotsUsed, 2) + " Lots – erlaubt sind max. " + p.maxlots + "."});
+      const lev = numVal(E.lev);
+      if(lev > 0 && entry > 0){
+        const margin = lotsUsed * ppl * entry / lev;
+        const eq = numVal(E.eqnow) > 0 ? numVal(E.eqnow) : size;
+        const share = eq > 0 ? margin / eq : NaN;
+        marginTxt = "Margin ca. " + usd(margin) + (eq > 0 ? " (" + nf(share * 100, 0) + " % der Equity)" : "");
+        if(eq > 0 && margin > eq) checks.push({lvl:"bad", t:"Margin", x:marginTxt + " – mehr als die Equity, die Order wird abgelehnt."});
+        else if(p.id === "fn-1" && share > 0.3) checks.push({lvl:"bad", t:"Margin", x:marginTxt + " – im DTP sind max. 30 % erlaubt."});
+        else if(share > 0.5) checks.push({lvl:"warn", t:"Margin", x:marginTxt + " – wenig Puffer für weitere Positionen."});
+        else checks.push({lvl:"ok", t:"Margin", x:marginTxt + "."});
+      }else if(!p.maxlots || lotsUsed <= p.maxlots){
+        if(p.maxlots) checks.push({lvl:"ok", t:"Lots", x:nf(lotsUsed, 2) + " von max. " + p.maxlots + " Lots."});
+      }
+    }
+    if(marginTxt && E.o1s.textContent) E.o1s.textContent += " · " + marginTxt;
+
+    /* Zeit & News */
+    const now = Date.now();
+    const tc = timeCheck(p, now); if(tc) checks.push(tc);
+    const nc = newsCheck(p, inst.id, now); if(nc) checks.push(nc);
+    renderAmpel(checks, p);
     save();
+  }
+  function renderAmpel(checks, p){
+    const a = E.ampel;
+    if(p.id === "none"){ a.className = "ampel c-ampel"; a.innerHTML = '<div class="amp-empty">Firma &amp; Konto wählen – dann prüft die Ampel Risiko, Tages-Spielraum, News und Wochenende.</div>'; return; }
+    const rank = {bad:3, warn:2, ok:1, info:0};
+    const worst = checks.reduce((m, c) => rank[c.lvl] > rank[m] ? c.lvl : m, "info");
+    const lvl = worst === "info" ? "ok" : worst;
+    const HEAD = {ok:["Grün", "passt – Trade nach Regeln möglich"], warn:["Gelb", "aufpassen – einen Punkt prüfen"], bad:["Rot", "so nicht – erst anpassen"]};
+    const IC = {ok:"✓", warn:"!", bad:"✕", info:"i"};
+    a.className = "ampel c-ampel " + lvl;
+    a.innerHTML = '<div class="amp-head"><span class="amp-lights"><i class="r"></i><i class="y"></i><i class="g"></i></span>'
+      + "<div><b>" + HEAD[lvl][0] + "</b><span>" + HEAD[lvl][1] + "</span></div></div>"
+      + '<ul class="amp-list">' + checks.map(c => '<li class="' + c.lvl + '"><span class="ai">' + IC[c.lvl] + "</span><div><b>" + esc(c.t) + "</b> " + esc(c.x) + "</div></li>").join("") + "</ul>";
   }
 
   /* Events */
@@ -2738,9 +3434,19 @@ function initCalc(root){
     if(e.target === E.inst){
       const inst = INSTR_MAP[E.inst.value];
       if(inst) E.ppl.value = inst.ppl;
+      autoLev();
+    }
+    if(e.target === E.lev && ev === "input") st.levAuto = false;
+    if(e.target === E.preset && ev === "change"){
+      autoLev();
+      update();
+      RModal.show(prof(), false, rulesExtra(prof()));
+      return;
     }
     update();
   }));
+  E.dayBox.addEventListener("toggle", save);
+  E.rulesBtn.addEventListener("click", () => RModal.show(prof(), true, rulesExtra(prof())));
   const step = (d) => {
     let v = numVal(E.risk);
     if(isNaN(v)) v = 0;
@@ -2755,14 +3461,16 @@ function initCalc(root){
   E.dir.forEach(b => b.addEventListener("click", () => { st.dir = b.dataset.dir; setSeg(E.dir, st.dir, "dir"); update(); }));
   E.mode.forEach(b => b.addEventListener("click", () => { st.mode = b.dataset.mode; setSeg(E.mode, st.mode, "mode"); update(); }));
   E.clear.addEventListener("click", () => {
-    ["size", "start", "lots", "sld", "entry", "cust"].forEach(f => { E[f].value = ""; });
+    ["size", "start", "lots", "sld", "entry", "cust", "dbal", "deq", "eqnow"].forEach(f => { E[f].value = ""; });
     E.risk.value = "1";
     update();
     E.size.focus();
   });
   setSeg(E.dir, st.dir, "dir");
   setSeg(E.mode, st.mode, "mode");
+  autoLev();
   update();
+  setInterval(() => { if(!document.hidden) update(); }, 30000);
 }
 document.querySelectorAll(".calc[data-calc]").forEach(initCalc);
 
@@ -3203,12 +3911,561 @@ document.getElementById("fx-quick").addEventListener("click", (e) => {
   }));
 })();
 
+
+/* =====================================================================
+   V7 – News-Sperren pro Firma, Tracker, Beweis-Log
+===================================================================== */
+
+/* ---------- News-Sperren pro Firma (Markt-Tab) ---------- */
+(function(){
+  const list = document.getElementById("nb-list");
+  if(!list) return;
+  const btns = document.querySelectorAll(".nb-inst button");
+  let inst = store.get("pd:nbInst") || "XAUUSD";
+  const pad2 = n => String(n).padStart(2, "0");
+  const clock = ms => { const s = Math.max(0, Math.floor(ms / 1000)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return (h ? h + ":" + pad2(m) : m) + ":" + pad2(s % 60); };
+  function render(){
+    btns.forEach(b => b.classList.toggle("active", b.dataset.i === inst));
+    const now = Date.now();
+    list.innerHTML = NEWS_FIRMS.map(([pid, name]) => {
+      const p = PRESET_MAP[pid];
+      const bl = newsBlocks(p, inst, now - 3 * 3600000, 8 * 86400000);
+      const win = p.news ? "±" + p.news[0] + " Min" : "keine Regel";
+      let cls = "ok", st = "", sub = "";
+      if(bl === null){ cls = "wait"; st = "Feed lädt …"; }
+      else{
+        const cur = bl.find(b => b.a <= now && now <= b.b);
+        const nx = bl.find(b => b.a > now);
+        if(cur){ cls = "bad"; st = "gesperrt · noch " + clock(cur.b - now); sub = "bis " + fmtClock.format(new Date(cur.b)) + " · " + cur.titles.join(", "); }
+        else if(nx){
+          const left = nx.a - now;
+          cls = left <= 30 * 60000 ? "warn" : (left <= 3 * 3600000 ? "soon" : "ok");
+          st = left < 86400000 ? "in " + clock(left) : fmtWdHM.format(new Date(nx.a));
+          sub = fmtClock.format(new Date(nx.a)) + "–" + fmtClock.format(new Date(nx.b)) + " · " + nx.titles.slice(0, 2).join(", ") + (nx.titles.length > 2 ? " +" + (nx.titles.length - 2) : "");
+        }else{ st = "frei"; sub = "keine Sperre im Feed der nächsten Tage"; }
+      }
+      return '<div class="nb-row ' + cls + '"><div class="nb-f"><span class="nb-dot"></span><b>' + esc(name) + "</b><small>" + win + (pid === "acg-pro10" && inst === "XAUUSD" ? " · inkl. AUD/CAD + Top-Daten" : "") + "</small></div>"
+        + '<div class="nb-s"><b>' + esc(st) + "</b><small>" + esc(sub) + "</small></div></div>";
+    }).join("");
+  }
+  btns.forEach(b => b.addEventListener("click", () => { inst = b.dataset.i; store.set("pd:nbInst", inst); render(); requestAnimationFrame(() => { if(window.__placeGliders) window.__placeGliders(); }); }));
+  render();
+  setInterval(() => { if(!document.hidden) render(); }, 1000);
+})();
+
+/* ---------- E-Mail-Entwurf-Fenster ---------- */
+const MailModal = (function(){
+  const el = document.getElementById("mailmodal");
+  if(!el) return {show(){}};
+  const title = el.querySelector("#mm-title"), ta = el.querySelector(".mm-text"), vars = el.querySelectorAll(".mm-var button");
+  let texts = ["", ""], cur = 0;
+  function set(i){ cur = i; vars.forEach(b => b.classList.toggle("active", +b.dataset.v === i)); ta.value = texts[i]; requestAnimationFrame(() => { if(window.__placeGliders) window.__placeGliders(); }); }
+  function close(){ el.hidden = true; document.body.classList.remove("rm-open"); }
+  el.addEventListener("click", e => { if(e.target === el || e.target.closest(".rm-x")) close(); });
+  document.addEventListener("keydown", e => { if(e.key === "Escape" && !el.hidden) close(); });
+  vars.forEach(b => b.addEventListener("click", () => { texts[cur] = ta.value; set(+b.dataset.v); }));
+  el.querySelector(".mm-copy").addEventListener("click", async () => {
+    try{ await navigator.clipboard.writeText(ta.value); toast("Entwurf kopiert"); }
+    catch(e){ ta.select(); try{ document.execCommand("copy"); toast("Entwurf kopiert"); }catch(_){ toast("Bitte manuell kopieren"); } }
+  });
+  return { show(t, variants){ title.textContent = t; texts = variants.slice(); el.hidden = false; document.body.classList.add("rm-open"); set(0); ta.scrollTop = 0; } };
+})();
+
+/* ---------- Payout-Historie ---------- */
+(function(){
+  const card = document.getElementById("ph-card");
+  if(!card) return;
+  const q = s => card.querySelector(s);
+  const KEY = "pd:payhist";
+  let rows = store.get(KEY) || [];
+  const rates = store.get("pd:fxhist") || {};
+  const STATUS = {paid:"ausgezahlt", pending:"beantragt", denied:"abgelehnt"};
+  const iso = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  q(".ph-date").value = iso(new Date());
+  const eur = v => nf(v, 2) + " €";
+  async function rateFor(date){
+    if(rates[date]) return rates[date];
+    try{
+      const today = iso(new Date());
+      const url = "https://api.frankfurter.dev/v1/" + (date >= today ? "latest" : date) + "?from=USD&to=EUR";
+      const r = await fetch(url);
+      const d = await r.json();
+      const v = d && d.rates && d.rates.EUR;
+      if(v){ if(date < today){ rates[date] = v; store.set("pd:fxhist", rates); } return v; }
+    }catch(e){}
+    return (typeof fxRate !== "undefined" && fxRate) ? fxRate : null;
+  }
+  function save(){ store.set(KEY, rows); }
+  function render(){
+    rows.sort((a, b) => b.date.localeCompare(a.date));
+    const paid = rows.filter(r => r.status === "paid");
+    const sum = paid.reduce((a, r) => a + r.amt, 0);
+    const sumE = paid.reduce((a, r) => a + (r.rate ? r.amt * r.rate : 0), 0);
+    const yr = String(new Date().getFullYear());
+    const ys = paid.filter(r => r.date.startsWith(yr));
+    q(".ph-kpis").innerHTML = '<div class="cc-kpi"><b>' + usd(sum) + '</b><span>gesamt ausgezahlt</span></div>'
+      + '<div class="cc-kpi"><b>' + eur(sumE) + '</b><span>in Euro (Kurs am Tag)</span></div>'
+      + '<div class="cc-kpi"><b>' + usd(ys.reduce((a, r) => a + r.amt, 0)) + '</b><span>' + yr + " · " + ys.length + " Payouts</span></div>"
+      + '<div class="cc-kpi"><b>' + rows.filter(r => r.status === "pending").length + " / " + rows.filter(r => r.status === "denied").length + '</b><span>beantragt / abgelehnt</span></div>';
+    const by = {};
+    paid.forEach(r => { by[r.firm] = (by[r.firm] || 0) + r.amt; });
+    q(".ph-firms").innerHTML = Object.keys(by).sort((a, b) => by[b] - by[a]).map(f => '<span class="ph-chip"><b>' + esc(FIRM_NAMES[f] || "Andere") + "</b> " + usd(by[f]) + "</span>").join("");
+    q(".ph-list").innerHTML = rows.length ? '<div class="ph-table">' + rows.map((r, i) =>
+      '<div class="ph-row ' + r.status + '"><span class="ph-d">' + r.date.split("-").reverse().join(".") + "</span>"
+      + '<span class="ph-f"><b>' + esc(FIRM_NAMES[r.firm] || "Andere") + "</b>" + (r.acct ? "<small>" + esc(r.acct) + "</small>" : "") + "</span>"
+      + '<span class="ph-a"><b>' + usd(r.amt) + "</b><small>" + (r.rate ? eur(r.amt * r.rate) : "€ wird geladen") + "</small></span>"
+      + '<span class="ph-s">' + STATUS[r.status] + " · " + esc(r.method) + "</span>"
+      + '<button type="button" class="ph-del" data-i="' + i + '" aria-label="Eintrag löschen">✕</button></div>').join("") + "</div>"
+      : '<p class="hint ph-empty">Noch keine Payouts eingetragen.</p>';
+  }
+  async function fillRates(){
+    let changed = false;
+    for(const r of rows){ if(!r.rate){ const v = await rateFor(r.date); if(v){ r.rate = v; changed = true; } } }
+    if(changed){ save(); render(); }
+  }
+  q(".ph-add").addEventListener("click", () => {
+    const amt = numVal(q(".ph-amt")), date = q(".ph-date").value;
+    if(!(amt > 0) || !date){ toast("Datum und Betrag eintragen"); return; }
+    rows.push({id: Date.now().toString(36), date, firm: q(".ph-firm").value, acct: q(".ph-acct").value.trim(), amt, status: q(".ph-status").value, method: q(".ph-method").value, rate: null});
+    save(); render(); fillRates();
+    q(".ph-amt").value = ""; toast("Payout eingetragen");
+  });
+  q(".ph-list").addEventListener("click", e => {
+    const b = e.target.closest(".ph-del"); if(!b) return;
+    rows.splice(+b.dataset.i, 1); save(); render();
+  });
+  q(".ph-csv").addEventListener("click", () => {
+    if(!rows.length){ toast("Noch keine Einträge"); return; }
+    const head = "Datum;Firma;Konto;Betrag USD;Kurs USD/EUR;Betrag EUR;Status;Weg";
+    const csv = [head].concat(rows.map(r => [r.date, FIRM_NAMES[r.firm] || "Andere", r.acct, String(r.amt).replace(".", ","), r.rate ? String(r.rate).replace(".", ",") : "", r.rate ? (r.amt * r.rate).toFixed(2).replace(".", ",") : "", STATUS[r.status], r.method].map(v => '"' + String(v || "").replace(/"/g, '""') + '"').join(";"))).join("\r\n");
+    downloadBlob(new Blob(["﻿" + csv], {type:"text/csv;charset=utf-8"}), "payouts-" + iso(new Date()) + ".csv");
+  });
+  render(); fillRates();
+})();
+function downloadBlob(blob, name){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name; a.style.display = "none";
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 3000);
+}
+
+/* ---------- Programm-Tracker: Alpha FTG, FundedNext DTP, Verstöße ---------- */
+(function(){
+  const ftg = document.getElementById("ftg-card");
+  if(ftg){
+    const q = s => ftg.querySelector(s);
+    const KEY = "pd:ftg";
+    let st = Object.assign({buy:"new", type:"bw", need:"", first:"", chain:[], c1:false, c2:false}, store.get(KEY) || {});
+    const segBuy = ftg.querySelectorAll(".ftg-buy button"), segType = ftg.querySelectorAll(".ftg-type button");
+    const today = () => new Date().toISOString().slice(0, 10);
+    function needN(){ const v = parseInt(st.need, 10); return v > 0 ? v : (st.buy === "old" ? 2 : 1); }
+    function streak(){ let n = 0; for(let i = st.chain.length - 1; i >= 0; i--){ if(st.chain[i].ok) n++; else break; } return n; }
+    function render(){
+      segBuy.forEach(b => b.classList.toggle("active", b.dataset.v === st.buy));
+      segType.forEach(b => b.classList.toggle("active", b.dataset.v === st.type));
+      q(".ftg-need").placeholder = st.buy === "old" ? "2" : "1";
+      q(".ftg-need").value = st.need; q(".ftg-first").value = st.first;
+      q(".ftg-c1").checked = st.c1; q(".ftg-c2").checked = st.c2;
+      q(".ftg-chain").innerHTML = st.chain.length ? st.chain.map(c => '<span class="ch ' + (c.ok ? "ok" : "no") + '">' + (c.ok ? "✓" : "✕") + " " + c.date.split("-").reverse().slice(0, 2).join(".") + "</span>").join("")
+        : '<span class="hint">Noch kein Payout seit Aufnahme eingetragen.</span>';
+      const n = needN(), s = streak();
+      const days = st.first ? Math.floor((Date.now() - new Date(st.first + "T12:00:00").getTime()) / 86400000) : null;
+      const items = [
+        [s >= n, s + " / " + n + " erfolgreiche Payouts in Folge" + (st.chain.length && !st.chain[st.chain.length - 1].ok ? " – der letzte abgelehnte Payout hat die Kette unterbrochen" : "")],
+        [st.c1, "Konto auf dem Startsaldo"],
+        [st.c2, "Keine offenen Positionen beim Antrag"]
+      ];
+      if(st.type === "od") items.push([days != null && days >= 30, "On-Demand: mind. 30 Tage Handelsdaten" + (days != null ? " (" + Math.max(0, days) + " Tage)" : " – ersten Trade eintragen")]);
+      const ready = items.every(i => i[0]);
+      q(".ftg-out").innerHTML = '<div class="trk-bar"><span style="width:' + Math.min(100, s / n * 100) + '%"></span></div>'
+        + '<ul class="cs-checks">' + items.map(([ok, t]) => '<li class="' + (ok ? "ok" : "no") + '"><span>' + (ok ? "✓" : "✕") + "</span><div>" + esc(t) + "</div></li>").join("") + "</ul>"
+        + '<div class="limit-box show ' + (ready ? "ok" : "info") + '"><span class="lb-ic">' + (ready ? "✓" : "i") + "</span><span>"
+        + (ready ? "<b>Antrag auf Ausstieg möglich</b> – per E-Mail an Alpha, Entwurf unten." : "Noch nicht so weit – " + (s < n ? (n - s === 1 ? "es fehlt 1 erfolgreicher Payout in Folge." : "es fehlen " + (n - s) + " erfolgreiche Payouts in Folge.") : "die offenen Punkte oben erfüllen.")) + "</span></div>";
+      store.set(KEY, st);
+    }
+    segBuy.forEach(b => b.addEventListener("click", () => { st.buy = b.dataset.v; render(); window.__placeGliders && window.__placeGliders(); }));
+    segType.forEach(b => b.addEventListener("click", () => { st.type = b.dataset.v; render(); window.__placeGliders && window.__placeGliders(); }));
+    q(".ftg-need").addEventListener("input", e => { st.need = e.target.value; render(); });
+    q(".ftg-first").addEventListener("change", e => { st.first = e.target.value; render(); });
+    q(".ftg-c1").addEventListener("change", e => { st.c1 = e.target.checked; render(); });
+    q(".ftg-c2").addEventListener("change", e => { st.c2 = e.target.checked; render(); });
+    q(".ftg-ok").addEventListener("click", () => { st.chain.push({ok:true, date:today()}); render(); });
+    q(".ftg-no").addEventListener("click", () => { st.chain.push({ok:false, date:today()}); render(); });
+    q(".ftg-undo").addEventListener("click", () => { st.chain.pop(); render(); });
+    render();
+  }
+  const dtp = document.getElementById("dtp-card");
+  if(dtp){
+    const q = s => dtp.querySelector(s);
+    const KEY = "pd:dtp";
+    let st = Object.assign({since:"", profit:"", cyc:"0"}, store.get(KEY) || {});
+    function render(){
+      q(".dtp-since").value = st.since; q(".dtp-profit").value = st.profit; q(".dtp-cyc").value = st.cyc;
+      const pr = parseFloat(st.profit) || 0, cy = parseInt(st.cyc, 10) || 0;
+      const ok1 = pr >= 30000, ok2 = cy >= 5;
+      q(".dtp-out").innerHTML = '<div class="dtp-bars">'
+        + '<div><span>Gewinn</span><div class="trk-bar"><span style="width:' + Math.min(100, pr / 300) + '%"></span></div><b>' + usd(pr) + " / 30.000 $</b></div>"
+        + '<div><span>Zyklen</span><div class="trk-bar"><span style="width:' + Math.min(100, cy * 20) + '%"></span></div><b>' + cy + " / 5</b></div></div>"
+        + '<div class="limit-box show ' + (ok1 && ok2 ? "ok" : "info") + '"><span class="lb-ic">' + (ok1 && ok2 ? "✓" : "i") + "</span><span>"
+        + (ok1 && ok2 ? "<b>Antrag beim Trading Ethics Team möglich.</b>" : "Noch " + (ok1 ? "" : usd(30000 - pr) + " Gewinn") + (!ok1 && !ok2 ? " und " : "") + (ok2 ? "" : (5 - cy) + " Reward-Zyklen") + " bis zum Antrag.") + "</span></div>";
+      store.set(KEY, st);
+    }
+    q(".dtp-since").addEventListener("change", e => { st.since = e.target.value; render(); });
+    q(".dtp-profit").addEventListener("input", e => { st.profit = e.target.value; render(); });
+    q(".dtp-cyc").addEventListener("input", e => { st.cyc = e.target.value; render(); });
+    q(".dtp-minus").addEventListener("click", () => { st.cyc = String(Math.max(0, (parseInt(st.cyc, 10) || 0) - 1)); render(); });
+    q(".dtp-plus").addEventListener("click", () => { st.cyc = String((parseInt(st.cyc, 10) || 0) + 1); render(); });
+    render();
+  }
+  const viol = document.querySelector("#viol-card .viol-list");
+  if(viol){
+    const DEF = [
+      {id:"fp", name:"FundingPips · Strikes", max:4, steps:["keine Strikes", "Warnung – Gewinn der Trade-Idee weg", "Split halbiert", "Split nur noch 20 %", "Konto geschlossen"]},
+      {id:"fn", name:"FundedNext · Risk-Limit-Verstöße", max:3, steps:["kein Verstoß", "Warnung + 100 % Gewinnabzug der Trades", "dauerhaft 1 % Risiko ab Tagesende", "erneut 100 % Gewinnabzug – Reward in Gefahr"]},
+      {id:"acg", name:"Alpha · Lot-Verstöße (FTG)", max:2, steps:["kein Verstoß", "Mehr-Gewinn aus dem Lot-Überhang ist weg", "Auszahlung verfällt, Konto wird deaktiviert"]}
+    ];
+    let st = store.get("pd:viol") || {};
+    function render(){
+      viol.innerHTML = DEF.map(d => {
+        const v = Math.min(d.max, st[d.id] && st[d.id].n || 0), lbl = st[d.id] && st[d.id].acct || "";
+        const lvl = v === 0 ? "ok" : (v >= d.max - 1 ? "bad" : "warn");
+        return '<div class="vl-row ' + lvl + '" data-id="' + d.id + '"><div class="vl-top"><b>' + esc(d.name) + "</b>"
+          + '<div class="vl-ctl"><button type="button" class="vl-m" aria-label="weniger">−</button><span class="vl-n">' + v + "<small>/" + d.max + "</small></span>"
+          + '<button type="button" class="vl-p" aria-label="mehr">+</button></div></div>'
+          + '<div class="vl-dots">' + Array.from({length:d.max}, (_, i) => '<i class="' + (i < v ? "on" : "") + '"></i>').join("") + "</div>"
+          + '<p class="vl-now"><b>Jetzt:</b> ' + esc(d.steps[v]) + (v < d.max ? ' · <span>nächster: ' + esc(d.steps[v + 1]) + "</span>" : "") + "</p>"
+          + '<input type="text" class="inp vl-acct" maxlength="40" placeholder="Konto (optional)" value="' + esc(lbl) + '"></div>';
+      }).join("");
+    }
+    viol.addEventListener("click", e => {
+      const row = e.target.closest(".vl-row"); if(!row) return;
+      const d = DEF.find(x => x.id === row.dataset.id), cur = st[d.id] || {n:0, acct:""};
+      if(e.target.closest(".vl-p")) cur.n = Math.min(d.max, cur.n + 1);
+      else if(e.target.closest(".vl-m")) cur.n = Math.max(0, cur.n - 1);
+      else return;
+      st[d.id] = cur; store.set("pd:viol", st); render();
+    });
+    viol.addEventListener("input", e => {
+      if(!e.target.classList.contains("vl-acct")) return;
+      const id = e.target.closest(".vl-row").dataset.id;
+      st[id] = Object.assign({n:0}, st[id] || {}, {acct:e.target.value}); store.set("pd:viol", st);
+    });
+    render();
+  }
+  /* E-Mail-Entwürfe */
+  document.querySelectorAll(".trk-mail").forEach(b => b.addEventListener("click", () => {
+    if(b.dataset.mail === "ftg"){
+      const s = store.get("pd:ftg") || {chain:[]};
+      const okN = (s.chain || []).filter(c => c.ok).length;
+      MailModal.show("Alpha Capital – Ausstieg Focused Trader Group", [
+        "Subject: Request to leave the Focused Trader Group – Account [account number]\n\nDear Alpha Capital Risk Team,\n\nI would like to request the removal of my account [account number] from the Focused Trader Group.\n\nSince joining the group, I have completed " + okN + " successful performance fee request(s) in compliance with all group rules. The account is back at its starting balance and there are no open positions.\n\nCould you please review my account and confirm my return to the standard trading conditions in writing?\n\nThank you for your support.\n\nKind regards,\n[Name]",
+        "Subject: Exit from the Focused Trader Group – Account [account number]\n\nDear Alpha Capital Risk Team,\n\nI am writing to formally request the exit of account [account number] from the Focused Trader Group.\n\nAccording to the published conditions, the exit requires [number] successful performance fee request(s) in a row, the starting balance and no open positions. All of these conditions are met as of [date]: " + okN + " successful request(s), starting balance reached, no open positions.\n\nPlease confirm the exit in writing within 5 business days. If you see any reason that prevents the exit, please name the specific rule and the trades concerned.\n\nRegards,\n[Name]"]);
+    }else{
+      const s = store.get("pd:dtp") || {};
+      MailModal.show("FundedNext – Ausstieg Disciplined Trader Program", [
+        "Subject: Request to exit the Disciplined Trader Program\n\nDear FundedNext Trading Ethics Team,\n\nI was added to the Disciplined Trader Program on " + (s.since || "[date]") + ". Since then I have generated a total profit of " + (s.profit ? usd(parseFloat(s.profit)) : "[amount]") + " across my FundedNext accounts and completed " + (s.cyc || "[number]") + " reward cycles.\n\nAs this meets the published exit criteria (USD 30,000 total profit and 5 reward cycles), I kindly request my removal from the program and the return to the standard conditions.\n\nThank you for reviewing my request.\n\nKind regards,\n[Name]",
+        "Subject: Formal request – exit from the Disciplined Trader Program\n\nDear FundedNext Trading Ethics Team,\n\nI am formally requesting my exit from the Disciplined Trader Program. I joined on " + (s.since || "[date]") + " and have since reached " + (s.profit ? usd(parseFloat(s.profit)) : "[amount]") + " in total profit and " + (s.cyc || "[number]") + " completed reward cycles, which meets the published criteria.\n\nPlease confirm my removal from the program in writing within 5 business days. If any condition is considered unmet, please state the specific rule and data point.\n\nRegards,\n[Name]"]);
+    }
+  }));
+})();
+
+/* ---------- Beweis-Log (IndexedDB) ---------- */
+const BLDB = (function(){
+  let dbp = null;
+  function open(){
+    if(!dbp) dbp = new Promise((res, rej) => {
+      if(!window.indexedDB){ rej(new Error("IndexedDB nicht verfügbar")); return; }
+      const r = indexedDB.open("pd-beweise", 1);
+      r.onupgradeneeded = () => {
+        const db = r.result;
+        if(!db.objectStoreNames.contains("cases")) db.createObjectStore("cases", {keyPath:"id"});
+        if(!db.objectStoreNames.contains("files")){ const f = db.createObjectStore("files", {keyPath:"id"}); f.createIndex("caseId", "caseId"); }
+      };
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+    return dbp;
+  }
+  function req(storeName, mode, fn){
+    return open().then(db => new Promise((res, rej) => {
+      const t = db.transaction(storeName, mode);
+      const r = fn(t.objectStore(storeName));
+      let out;
+      if(r) r.onsuccess = () => { out = r.result; };
+      t.oncomplete = () => res(out);
+      t.onerror = () => rej(t.error);
+      t.onabort = () => rej(t.error);
+    }));
+  }
+  return {
+    cases: () => req("cases", "readonly", s => s.getAll()),
+    putCase: c => req("cases", "readwrite", s => s.put(c)),
+    delCase: id => req("cases", "readwrite", s => s.delete(id)).then(() => BLDB.filesOf(id)).then(fs => Promise.all((fs || []).map(f => BLDB.delFile(f.id)))),
+    putFile: f => req("files", "readwrite", s => s.put(f)),
+    getFile: id => req("files", "readonly", s => s.get(id)),
+    delFile: id => req("files", "readwrite", s => s.delete(id)),
+    filesOf: cid => req("files", "readonly", s => s.index("caseId").getAll(cid)),
+    allFiles: () => req("files", "readonly", s => s.getAll())
+  };
+})();
+
+(function(){
+  const listEl = document.getElementById("bl-list"), main = document.getElementById("bl-main");
+  if(!listEl || !main) return;
+  const TYPES = {
+    exec:["Ausführung / Slippage", ["Deal-Ticket mit Ausführungszeit auf die Sekunde", "Tickdaten zur Uhrzeit (z. B. Dukascopy)", "Chart-Screenshot mit Uhrzeit und Spread", "Trade-Historie als Export", "Schriftliche Aussage des Supports zur Ausführung", "Regeltext mit Datum (Screenshot + Link)"]],
+    rule:["Regel falsch angewendet", ["Regeltext zum Kaufdatum (Screenshot + Link)", "Kaufdatum und Kontotyp belegt", "Eigene Nachrechnung mit Zahlen", "Alle Support-Antworten (Chat + E-Mail)", "Widersprüche zwischen Kanälen markiert", "Günstigste offizielle Aussage zitiert"]],
+    payout:["Payout verweigert / verzögert", ["Screenshot vom Payout-Antrag", "Ablehnungsgrund schriftlich", "Betroffene Trades mit Ticket-Nr.", "Regeltext zur angeblich verletzten Regel", "Zeitlinie seit dem Antrag"]],
+    change:["Regeländerung ohne Info", ["Alte Regel (Screenshot / Archiv-Link)", "Neue Regel mit Datum", "Kaufdatum des Kontos", "Postfach geprüft: keine Ankündigung", "Schriftliche Bestätigung der alten Bedingungen angefragt"]],
+    breach:["Konto gesperrt / Breach", ["Breach-E-Mail oder Dashboard-Screenshot", "Balance- und Equity-Verlauf am Tag", "Trades rund um den Breach mit Ticket-Nr.", "Server-Zeit und Rechenbasis der Firma", "Tickdaten zum Breach-Zeitpunkt"]],
+    other:["Sonstiges", ["Screenshots", "Schriftverkehr", "Zeitlinie"]]
+  };
+  const STATUS = {open:"offen", wait:"wartet auf Antwort", esc:"eskaliert", won:"gelöst", lost:"abgelehnt"};
+  const KINDS = ["Notiz", "Support-Chat", "E-Mail gesendet", "E-Mail erhalten", "Ticket / Antrag", "Screenshot / Datei", "Antwort der Firma", "Eskalation"];
+  let cases = [], cur = null, filesCache = {}, urlCache = {}, okDb = true;
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const nowLocal = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 16); };
+  const fmtTs = s => { if(!s) return ""; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString("de-DE", {day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit"}); };
+  const kb = n => n > 1048576 ? nf(n / 1048576, 1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB";
+  const sel = (opts, v) => Object.keys(opts).map(k => '<option value="' + k + '"' + (k === v ? " selected" : "") + ">" + esc(Array.isArray(opts[k]) ? opts[k][0] : opts[k]) + "</option>").join("");
+  const firmSel = v => Object.keys(FIRM_NAMES).concat(["other"]).map(k => '<option value="' + k + '"' + (k === v ? " selected" : "") + ">" + esc(FIRM_NAMES[k] || "Andere") + "</option>").join("");
+
+  async function load(){
+    try{ cases = (await BLDB.cases()) || []; }
+    catch(e){ okDb = false; cases = []; }
+    cases.sort((a, b) => (b.updated || 0) - (a.updated || 0));
+    const last = store.get("pd:blCur");
+    renderList();
+    if(last && cases.find(c => c.id === last)) open(last); else renderEmpty();
+  }
+  function renderList(){
+    if(!okDb){ listEl.innerHTML = '<p class="hint bl-pad">Dieser Browser erlaubt keinen lokalen Speicher (z. B. privates Fenster). Der Beweis-Log funktioniert hier nicht.</p>'; return; }
+    listEl.innerHTML = cases.length ? cases.map(c => '<button type="button" class="bl-item' + (cur && cur.id === c.id ? " on" : "") + '" data-id="' + c.id + '">'
+      + '<span class="bl-st ' + c.status + '">' + esc(STATUS[c.status] || "offen") + "</span>"
+      + "<b>" + esc(c.title || "Ohne Titel") + "</b><small>" + esc(FIRM_NAMES[c.firm] || "Andere") + (c.acct ? " · " + esc(c.acct) : "") + " · " + (c.entries || []).length + " Einträge</small></button>").join("")
+      : '<p class="hint bl-pad">Noch keine Streitfälle. Mit „Neuer Fall“ anlegen – dann Screenshots, E-Mails und Tickets einfach reinziehen.</p>';
+  }
+  function renderEmpty(){
+    cur = null;
+    main.innerHTML = '<div class="bl-empty"><div class="bl-empty-ic">🗂</div><b>Fall auswählen oder neu anlegen</b><p class="hint">Tipp: Regeln vorher schriftlich bestätigen lassen · bei widersprüchlichen Aussagen die günstigste offizielle Quelle zitieren · nur behaupten, was die Daten belegen.</p></div>';
+  }
+  async function newCase(){
+    const c = {id:uid(), title:"Neuer Streitfall", firm:"fp", acct:"", type:"exec", status:"open", opened:new Date().toISOString().slice(0, 10), amount:"", goal:"", summary:"",
+      trade:{ticket:"", symbol:"XAUUSD", dir:"", lots:"", open:"", close:"", entry:"", exit:"", pnl:"", platform:""}, checks:{}, entries:[], created:Date.now(), updated:Date.now()};
+    await BLDB.putCase(c); cases.unshift(c); open(c.id);
+    const t = main.querySelector(".bl-title"); if(t){ t.focus(); t.select(); }
+  }
+  let saveT = null;
+  function saveSoon(){ clearTimeout(saveT); saveT = setTimeout(saveNow, 400); }
+  async function saveNow(){ if(!cur) return; cur.updated = Date.now(); await BLDB.putCase(cur); renderList(); }
+  async function open(id){
+    cur = cases.find(c => c.id === id); if(!cur){ renderEmpty(); return; }
+    store.set("pd:blCur", id);
+    const fs = (await BLDB.filesOf(id)) || [];
+    filesCache = {}; fs.forEach(f => { filesCache[f.id] = f; });
+    renderList(); renderCase();
+  }
+  function fileUrl(f){ if(!urlCache[f.id]) urlCache[f.id] = URL.createObjectURL(f.blob); return urlCache[f.id]; }
+  function fileChip(fid, withDel){
+    const f = filesCache[fid]; if(!f) return "";
+    const img = /^image\//.test(f.type);
+    return '<span class="bl-file' + (img ? " img" : "") + '" data-f="' + fid + '">'
+      + (img ? '<img src="' + fileUrl(f) + '" alt="' + esc(f.name) + '" loading="lazy">' : '<span class="bl-fic">' + esc((f.name.split(".").pop() || "DATEI").toUpperCase().slice(0, 4)) + "</span>")
+      + '<span class="bl-fn">' + esc(f.name) + "<small>" + kb(f.size) + "</small></span>"
+      + (withDel ? '<button type="button" class="bl-fdel" data-f="' + fid + '" aria-label="Datei entfernen">✕</button>' : "") + "</span>";
+  }
+  function renderCase(){
+    const c = cur, T = TYPES[c.type] || TYPES.other, tr = c.trade || {};
+    const done = T[1].filter((_, i) => c.checks[c.type + i]).length;
+    const entries = (c.entries || []).slice().sort((a, b) => (a.ts || "").localeCompare(b.ts || ""));
+    const nFiles = Object.keys(filesCache).length;
+    main.innerHTML = '<div class="card-head bl-head"><input class="calc-name bl-title" value="' + esc(c.title) + '" maxlength="80" aria-label="Titel des Falls">'
+      + '<div class="bl-acts"><button type="button" class="link-pill bl-mail">E-Mail ✉</button><button type="button" class="link-pill bl-print-b">Dossier / PDF</button><button type="button" class="link-pill bl-del">Löschen</button></div></div>'
+      + '<div class="card-body bl-body">'
+      + '<div class="bl-grid">'
+      + '<label class="fld"><span>Firma</span><select data-k="firm">' + firmSel(c.firm) + "</select></label>"
+      + '<label class="fld"><span>Konto-Nr.</span><input type="text" class="inp" data-k="acct" value="' + esc(c.acct) + '" maxlength="40"></label>'
+      + '<label class="fld"><span>Art</span><select data-k="type">' + sel(TYPES, c.type) + "</select></label>"
+      + '<label class="fld"><span>Status</span><select data-k="status">' + sel(STATUS, c.status) + "</select></label>"
+      + '<label class="fld"><span>Seit</span><input type="date" class="inp" data-k="opened" value="' + esc(c.opened) + '"></label>'
+      + '<label class="fld"><span>Betrag im Streit ($)</span><input type="number" class="inp" data-k="amount" value="' + esc(c.amount) + '" step="0.01" inputmode="decimal"></label>'
+      + "</div>"
+      + '<label class="fld"><span>Was ist passiert? (Kurzfassung)</span><textarea class="inp" data-k="summary" rows="3" placeholder="z. B. Trade wurde mit 9,6 Sek. Verzögerung ausgeführt, Breach durch Slippage">' + esc(c.summary) + "</textarea></label>"
+      + '<label class="fld"><span>Was willst du erreichen?</span><textarea class="inp" data-k="goal" rows="2" placeholder="z. B. Konto wieder freischalten, Payout auszahlen">' + esc(c.goal) + "</textarea></label>"
+      + '<details class="bl-trade"' + (tr.ticket || tr.lots ? " open" : "") + '><summary>Trade-Daten <span class="sm-ch">⌄</span></summary><div class="bl-grid">'
+      + [["ticket", "Ticket / Deal-ID", "text"], ["symbol", "Symbol", "text"], ["dir", "Richtung", "text"], ["lots", "Lots", "text"], ["open", "Eröffnet", "datetime-local"], ["close", "Geschlossen", "datetime-local"], ["entry", "Einstieg", "text"], ["exit", "Ausstieg", "text"], ["pnl", "Ergebnis ($)", "text"], ["platform", "Plattform", "text"]]
+          .map(([k, l, t]) => '<label class="fld"><span>' + l + '</span><input type="' + t + '" class="inp" data-t="' + k + '" value="' + esc(tr[k] || "") + '"></label>').join("")
+      + "</div></details>"
+      + '<div class="bl-sec"><div class="bl-sec-h"><b>Beweis-Checkliste</b><span class="hint">' + done + " / " + T[1].length + " · " + esc(T[0]) + "</span></div>"
+      + '<div class="trk-checks bl-checks">' + T[1].map((t, i) => '<label><input type="checkbox" data-c="' + c.type + i + '"' + (c.checks[c.type + i] ? " checked" : "") + "> " + esc(t) + "</label>").join("") + "</div></div>"
+      + '<div class="bl-sec"><div class="bl-sec-h"><b>Zeitstrahl</b><span class="hint">' + entries.length + " Einträge · " + nFiles + " Dateien</span></div>"
+      + '<div class="bl-add"><div class="bl-grid bl-add-g"><label class="fld"><span>Zeitpunkt</span><input type="datetime-local" class="inp bl-e-ts" value="' + nowLocal() + '"></label>'
+      + '<label class="fld"><span>Art</span><select class="bl-e-kind">' + KINDS.map(k => "<option>" + esc(k) + "</option>").join("") + "</select></label></div>"
+      + '<textarea class="inp bl-e-text" rows="3" placeholder="Was wurde gesagt oder geschickt? Support-Antworten am besten wörtlich einfügen."></textarea>'
+      + '<div class="bl-drop" tabindex="0"><b>Dateien hierher ziehen</b> oder <label class="bl-pick">auswählen<input type="file" class="bl-e-files" multiple hidden></label> · Screenshot mit Strg+V einfügen<div class="bl-pend"></div></div>'
+      + '<button type="button" class="primary bl-e-add">＋ Eintrag speichern</button></div>'
+      + '<ol class="bl-tl">' + (entries.length ? entries.map(en => '<li data-e="' + en.id + '"><div class="bl-tl-h"><span class="bl-k">' + esc(en.kind) + "</span><time>" + esc(fmtTs(en.ts)) + '</time><button type="button" class="bl-e-del" data-e="' + en.id + '" aria-label="Eintrag löschen">✕</button></div>'
+          + (en.text ? '<p class="bl-tl-t">' + esc(en.text).replace(/\n/g, "<br>") + "</p>" : "")
+          + ((en.files || []).length ? '<div class="bl-files">' + en.files.map(fid => fileChip(fid, false)).join("") + "</div>" : "") + "</li>").join("")
+        : '<li class="bl-tl-empty hint">Noch keine Einträge – leg den ersten an oder zieh Dateien in das Feld oben.</li>') + "</ol></div>"
+      + "</div>";
+    pending = [];
+  }
+  let pending = [];
+  function showPending(){
+    const box = main.querySelector(".bl-pend"); if(!box) return;
+    box.innerHTML = pending.map((f, i) => '<span class="bl-pf">' + esc(f.name) + " <small>" + kb(f.size) + '</small><button type="button" data-p="' + i + '" aria-label="entfernen">✕</button></span>').join("");
+  }
+  function addPending(list){
+    [...list].forEach(f => { if(f.size > 50 * 1048576){ toast(f.name + " ist größer als 50 MB"); return; } pending.push(f); });
+    showPending();
+  }
+  async function addEntry(quickFiles){
+    if(!cur) return;
+    const files = quickFiles || pending;
+    const text = quickFiles ? "" : main.querySelector(".bl-e-text").value.trim();
+    if(!text && !files.length){ toast("Text oder Datei hinzufügen"); return; }
+    const en = {id:uid(), ts: quickFiles ? nowLocal() : (main.querySelector(".bl-e-ts").value || nowLocal()), kind: quickFiles ? "Screenshot / Datei" : main.querySelector(".bl-e-kind").value, text, files:[]};
+    for(const f of files){
+      const rec = {id:uid(), caseId:cur.id, entryId:en.id, name:f.name || ("Screenshot-" + new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-") + ".png"), type:f.type || "application/octet-stream", size:f.size, blob:f, added:Date.now()};
+      try{ await BLDB.putFile(rec); filesCache[rec.id] = rec; en.files.push(rec.id); }
+      catch(e){ toast("Datei konnte nicht gespeichert werden – Speicher voll?"); }
+    }
+    cur.entries = cur.entries || []; cur.entries.push(en);
+    await saveNow(); renderCase();
+    toast(files.length ? files.length + (files.length === 1 ? " Datei" : " Dateien") + " gespeichert" : "Eintrag gespeichert");
+  }
+  async function delEntry(eid){
+    const en = (cur.entries || []).find(e => e.id === eid); if(!en) return;
+    for(const fid of en.files || []){ await BLDB.delFile(fid); delete filesCache[fid]; }
+    cur.entries = cur.entries.filter(e => e.id !== eid);
+    await saveNow(); renderCase();
+  }
+  /* Eingaben */
+  main.addEventListener("input", e => {
+    if(!cur) return;
+    const t = e.target;
+    if(t.classList.contains("bl-title")){ cur.title = t.value; saveSoon(); return; }
+    if(t.dataset.k){ cur[t.dataset.k] = t.value; saveSoon(); if(t.dataset.k === "type") renderCase(); return; }
+    if(t.dataset.t){ cur.trade = cur.trade || {}; cur.trade[t.dataset.t] = t.value; saveSoon(); return; }
+  });
+  main.addEventListener("change", e => {
+    if(!cur) return;
+    const t = e.target;
+    if(t.dataset.k){ cur[t.dataset.k] = t.value; saveNow(); if(t.dataset.k === "type") renderCase(); return; }
+    if(t.dataset.c){ cur.checks[t.dataset.c] = t.checked; saveNow(); const h = main.querySelector(".bl-sec-h .hint"); if(h){ const T = TYPES[cur.type] || TYPES.other; h.textContent = T[1].filter((_, i) => cur.checks[cur.type + i]).length + " / " + T[1].length + " · " + T[0]; } return; }
+    if(t.classList.contains("bl-e-files")){ addPending(t.files); t.value = ""; }
+  });
+  main.addEventListener("click", async e => {
+    const t = e.target;
+    if(t.closest(".bl-e-add")){ addEntry(); return; }
+    if(t.closest(".bl-e-del")){ delEntry(t.closest(".bl-e-del").dataset.e); return; }
+    if(t.closest(".bl-pend button")){ pending.splice(+t.closest("button").dataset.p, 1); showPending(); return; }
+    if(t.closest(".bl-del")){
+      const b = t.closest(".bl-del");
+      if(!b.dataset.arm){ b.dataset.arm = "1"; b.textContent = "Wirklich löschen?"; b.classList.add("arm"); setTimeout(() => { if(b.isConnected){ delete b.dataset.arm; b.textContent = "Löschen"; b.classList.remove("arm"); } }, 4000); return; }
+      await BLDB.delCase(cur.id); cases = cases.filter(c => c.id !== cur.id); store.set("pd:blCur", ""); renderList(); renderEmpty(); toast("Fall gelöscht"); return;
+    }
+    if(t.closest(".bl-print-b")){ printCase(); return; }
+    if(t.closest(".bl-mail")){ mailCase(); return; }
+    const chip = t.closest(".bl-file");
+    if(chip && !t.closest(".bl-fdel")){ const f = filesCache[chip.dataset.f]; if(f) window.open(fileUrl(f), "_blank", "noopener"); }
+  });
+  /* Drag & Drop + Einfügen */
+  main.addEventListener("dragover", e => { if(!cur) return; e.preventDefault(); main.classList.add("drag"); });
+  main.addEventListener("dragleave", e => { if(e.target === main || !main.contains(e.relatedTarget)) main.classList.remove("drag"); });
+  main.addEventListener("drop", e => {
+    if(!cur) return;
+    e.preventDefault(); main.classList.remove("drag");
+    const fs = e.dataTransfer && e.dataTransfer.files;
+    if(!fs || !fs.length) return;
+    if(e.target.closest(".bl-add")) addPending(fs);
+    else addEntry([...fs]);
+  });
+  document.addEventListener("paste", e => {
+    if(!cur || store.get("pd:tab") !== "logs") return;
+    const items = [...(e.clipboardData && e.clipboardData.items || [])].filter(i => i.kind === "file");
+    if(!items.length) return;
+    e.preventDefault();
+    addPending(items.map(i => i.getAsFile()).filter(Boolean));
+    toast("Bild eingefügt – mit „Eintrag speichern“ sichern");
+  });
+  listEl.addEventListener("click", e => { const b = e.target.closest(".bl-item"); if(!b) return; open(b.dataset.id); if(window.matchMedia("(max-width:980px)").matches) main.scrollIntoView({behavior:"smooth", block:"start"}); });
+  document.querySelector(".bl-new").addEventListener("click", () => { if(!okDb){ toast("Lokaler Speicher nicht verfügbar"); return; } newCase(); });
+
+  /* E-Mail-Entwurf aus dem Fall */
+  function mailCase(){
+    const c = cur, tr = c.trade || {}, firm = FIRM_NAMES[c.firm] || "[firm]";
+    const tl = (c.entries || []).slice().sort((a, b) => (a.ts || "").localeCompare(b.ts || "")).map(en => "- " + fmtTs(en.ts) + " – " + en.kind + (en.text ? ": " + en.text.split("\n")[0].slice(0, 160) : "")).join("\n");
+    const trade = tr.ticket || tr.lots ? "Trade details: ticket " + (tr.ticket || "[ticket]") + ", " + [tr.symbol, tr.dir, tr.lots ? tr.lots + " lots" : ""].filter(Boolean).join(" ") + (tr.open ? ", opened " + fmtTs(tr.open) : "") + (tr.close ? ", closed " + fmtTs(tr.close) : "") + (tr.pnl ? ", result " + tr.pnl + " USD" : "") + ".\n\n" : "";
+    const nF = Object.keys(filesCache).length;
+    const acct = c.acct || "[account number]";
+    MailModal.show(c.title, [
+      "Subject: Request for review – account " + acct + "\n\nDear " + firm + " Support Team,\n\nI am writing regarding my account " + acct + ".\n\n" + (c.summary || "[short description of what happened]") + "\n\n" + trade
+        + (tl ? "Timeline:\n" + tl + "\n\n" : "") + "I would kindly ask you to review this case and " + (c.goal || "[what you want to achieve]") + ". Please confirm the outcome in writing."
+        + (nF ? "\n\nI have attached the supporting evidence (" + nF + " file" + (nF > 1 ? "s" : "") + ")." : "") + "\n\nThank you for your time and support.\n\nKind regards,\n[Name]",
+      "Subject: Formal escalation – account " + acct + "\n\nDear " + firm + " Team,\n\nI am formally escalating the case regarding my account " + acct + ", open since " + (c.opened ? c.opened.split("-").reverse().join(".") : "[date]") + ".\n\n" + (c.summary || "[short description of what happened]") + "\n\n" + trade
+        + (tl ? "Timeline:\n" + tl + "\n\n" : "") + "Based on the evidence attached, I request that you " + (c.goal || "[what you want to achieve]") + " within 5 business days. If you maintain your decision, please name the exact rule applied, the version in force at my purchase date and the data it is based on."
+        + "\n\nRegards,\n[Name]"]);
+  }
+  /* Dossier drucken */
+  async function printCase(){
+    const c = cur, tr = c.trade || {}, T = TYPES[c.type] || TYPES.other, box = document.getElementById("bl-print");
+    const entries = (c.entries || []).slice().sort((a, b) => (a.ts || "").localeCompare(b.ts || ""));
+    const row = (k, v) => v ? "<tr><th>" + esc(k) + "</th><td>" + esc(v) + "</td></tr>" : "";
+    box.innerHTML = '<h1>' + esc(c.title) + "</h1><p class=\"pr-sub\">Dossier · erstellt " + new Date().toLocaleString("de-DE") + "</p>"
+      + "<table>" + row("Firma", FIRM_NAMES[c.firm] || "Andere") + row("Konto", c.acct) + row("Art", T[0]) + row("Status", STATUS[c.status]) + row("Seit", c.opened ? c.opened.split("-").reverse().join(".") : "") + row("Betrag im Streit", c.amount ? c.amount + " $" : "") + "</table>"
+      + (c.summary ? "<h2>Was ist passiert?</h2><p>" + esc(c.summary).replace(/\n/g, "<br>") + "</p>" : "")
+      + (c.goal ? "<h2>Ziel</h2><p>" + esc(c.goal).replace(/\n/g, "<br>") + "</p>" : "")
+      + (tr.ticket || tr.lots ? "<h2>Trade</h2><table>" + row("Ticket", tr.ticket) + row("Symbol", tr.symbol) + row("Richtung", tr.dir) + row("Lots", tr.lots) + row("Eröffnet", fmtTs(tr.open)) + row("Geschlossen", fmtTs(tr.close)) + row("Einstieg", tr.entry) + row("Ausstieg", tr.exit) + row("Ergebnis", tr.pnl) + row("Plattform", tr.platform) + "</table>" : "")
+      + "<h2>Beweis-Checkliste</h2><ul>" + T[1].map((t, i) => "<li>" + (c.checks[c.type + i] ? "☑ " : "☐ ") + esc(t) + "</li>").join("") + "</ul>"
+      + "<h2>Zeitstrahl</h2>" + entries.map(en => '<div class="pr-e"><b>' + esc(fmtTs(en.ts)) + " · " + esc(en.kind) + "</b>" + (en.text ? "<p>" + esc(en.text).replace(/\n/g, "<br>") + "</p>" : "")
+        + (en.files || []).map(fid => { const f = filesCache[fid]; if(!f) return ""; return /^image\//.test(f.type) ? '<figure><img src="' + fileUrl(f) + '"><figcaption>' + esc(f.name) + "</figcaption></figure>" : '<p class="pr-f">Anhang: ' + esc(f.name) + " (" + kb(f.size) + ")</p>"; }).join("") + "</div>").join("");
+    await Promise.all([...box.querySelectorAll("img")].map(i => i.decode ? i.decode().catch(() => {}) : null));
+    document.body.classList.add("printing-bl");
+    const done = () => { document.body.classList.remove("printing-bl"); window.removeEventListener("afterprint", done); };
+    window.addEventListener("afterprint", done);
+    window.print();
+    setTimeout(done, 60000);
+  }
+  /* Backup */
+  const toB64 = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1] || ""); r.onerror = () => rej(r.error); r.readAsDataURL(blob); });
+  document.querySelector(".bl-export").addEventListener("click", async () => {
+    try{
+      const cs = (await BLDB.cases()) || [], fs = (await BLDB.allFiles()) || [];
+      if(!cs.length){ toast("Noch keine Fälle zum Sichern"); return; }
+      const files = [];
+      for(const f of fs) files.push({id:f.id, caseId:f.caseId, entryId:f.entryId, name:f.name, type:f.type, size:f.size, added:f.added, data: await toB64(f.blob)});
+      downloadBlob(new Blob([JSON.stringify({app:"prop-dashboard-beweise", version:1, exported:new Date().toISOString(), cases:cs, files})], {type:"application/json"}), "beweis-log-backup-" + new Date().toISOString().slice(0, 10) + ".json");
+      toast(cs.length + " Fälle gesichert");
+    }catch(e){ toast("Backup fehlgeschlagen"); }
+  });
+  document.querySelector(".bl-import").addEventListener("change", async e => {
+    const file = e.target.files && e.target.files[0]; e.target.value = "";
+    if(!file) return;
+    try{
+      const data = JSON.parse(await file.text());
+      if(!data || data.app !== "prop-dashboard-beweise" || !Array.isArray(data.cases)) throw new Error("kein Backup");
+      for(const c of data.cases) await BLDB.putCase(c);
+      for(const f of data.files || []){
+        const bin = atob(f.data || ""), arr = new Uint8Array(bin.length);
+        for(let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        await BLDB.putFile({id:f.id, caseId:f.caseId, entryId:f.entryId, name:f.name, type:f.type, size:f.size, added:f.added, blob:new Blob([arr], {type:f.type})});
+      }
+      toast(data.cases.length + " Fälle importiert");
+      load();
+    }catch(err){ toast("Datei ist kein gültiges Beweis-Log-Backup"); }
+  });
+  load();
+})();
+
 /* ---------- Boot Erweiterung ---------- */
 renderDst();
 setInterval(renderDst, 30 * 60_000);
 (function(){
   const h = (location.hash || "").replace("#", "");
-  showTab(TAB_IDS.indexOf(h) > -1 ? h : (store.get("pd:tab") || "markt"), {noScroll:true});
+  showTab(TAB_IDS.indexOf(h) > -1 || h === "fx" ? h : (store.get("pd:tab") || "markt"), {noScroll:true});
 })();
 </script>
 </body>
